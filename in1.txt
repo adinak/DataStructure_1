@@ -1,0 +1,10 @@
+Init
+AddArtist 123 5
+AddArtist 456 3
+AddArtist 123 3
+RemoveArtist 456
+RemoveArtist 789
+AddToSongCount 123 3
+NumberOfStreams 123 3
+GetRecommendedSongs 3
+Quit

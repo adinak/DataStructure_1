@@ -1,0 +1,15 @@
+init done.
+AddArtist: SUCCESS
+AddArtist: SUCCESS
+AddArtist: FAILURE
+RemoveArtist: SUCCESS
+RemoveArtist: FAILURE
+AddToSongCount: SUCCESS
+NumberOfStreams: 1
+GetRecommendedSongs: SUCCESS
+Artist	|	Song
+123	|	3
+123	|	0
+123	|	1
+--End of recommended songs--
+quit done.
