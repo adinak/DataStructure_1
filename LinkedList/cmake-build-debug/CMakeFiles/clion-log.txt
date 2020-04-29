@@ -1,0 +1,4 @@
+"/Users/adinakatz/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/201.6668.126/CLion.app/Contents/bin/cmake/mac/bin/cmake" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/cmake-build-debug
