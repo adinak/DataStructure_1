@@ -29,8 +29,13 @@ private:
     void setRight(TreeNode<K,D>* next);
     void setLeft(TreeNode<K,D>* next);
 
-    template <class Key, class Data>
+
+    template<class KEY,class DATA>
+    friend std::ostream& operator<<(std::ostream& os, const TreeNode<KEY,DATA> &node);
+    template <class KEY,class DATA>
     friend class AVLTree;
+
+
 
 //TODO:delete when done testing
     friend class TestAVLTree;
@@ -79,15 +84,25 @@ TreeNode<K,D>* TreeNode<K,D>::getFather() {
 template<class K, class D>
 void TreeNode<K,D>::setLeft(TreeNode<K,D>* next){
     this->left = next;
-    this->hl = next->getHeight();
-    next->father = this;
+    if(next == nullptr){
+        this->hl = 0;
+    }
+    else {
+        this->hl = next->getHeight();
+        next->father = this;
+    }
 }
 
 template<class K, class D>
 void TreeNode<K,D>::setRight(TreeNode<K,D>* next){
     this->right = next;
-    this->hr = next->getHeight();
-    next->father = this;
+    if(next == nullptr){
+        this->hr = 0;
+    }
+    else {
+        this->hr = next->getHeight();
+        next->father = this;
+    }
 }
 
 
@@ -99,6 +114,12 @@ void TreeNode<K,D>::printNode(){
 template<class K, class D>
 int TreeNode<K, D>::getBf() {
     return (this->hl-this->hr);
+}
+
+template<class KEY, class DATA>
+std::ostream &operator<<(ostream &os, const TreeNode<KEY,DATA> &node) {
+    os<<"("<<node.key<<", "<<node.data<<")";
+    return os;
 }
 
 

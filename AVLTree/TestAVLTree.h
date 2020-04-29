@@ -6,24 +6,27 @@
 #define AVLTREE_TESTAVLTREE_H
 
 #include <iostream>
-#include "TreeNode.h"
+#include <cassert>
 #include "AVLTree.h"
 #include "vector"
 using namespace std;
 
 typedef enum {SUCCESS, FAIL} Test_result;
 
+#define TEST(i) testi()
 
 class TestAVLTree {
 private:
     Test_result test1();
     Test_result test2();
+    Test_result test3();
 public:
     TestAVLTree() = default;
     ~TestAVLTree() = default;
     Test_result test();
 
 };
+
 
 
 Test_result TestAVLTree::test1() {
@@ -58,15 +61,38 @@ Test_result TestAVLTree::test1() {
     C.setRight(&CR);
 
     for(auto node : nodes){
-        cout<<"(key:"<<node->getKey()<<", "<<"data:"<<node->getData()<<", "<<"hl:"<<node->hl<<", hr:"<<node->hr<<", BF:"<<node->getBf()<<endl;
+        cout<<*node<<", "<<"hl:"<<node->hl<<", hr:"<<node->hr<<", BF:"<<node->getBf()<<endl;
     }
-
-
-    return FAIL;
+    return SUCCESS;
 }
 
 Test_result TestAVLTree::test() {
+    //assert(test1() == SUCCESS);
+    //assert(test2() == SUCCESS);
+    assert(test3() == SUCCESS);
+    return SUCCESS;
+}
 
+Test_result TestAVLTree::test2() {
+    AVLTree<int,int> tree;
+    for(int i=7;i>0;i--){
+        tree.insert(i,i);
+    }
+    tree.printAVLTree(IN);
+    return SUCCESS;
+}
+
+Test_result TestAVLTree::test3() {
+    AVLTree<int,int> tree;
+    for(int i=7;i>0;i--){
+        tree.insert(i,i);
+    }
+    list<int> ordered_list;
+    int n = 4;
+    tree.getNLargestNodes(&ordered_list, n);
+    for(auto n : ordered_list){
+        cout<<n<<" ,";
+    }
     return SUCCESS;
 }
 
