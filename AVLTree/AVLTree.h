@@ -12,7 +12,7 @@ using std::list;
 #include "TreeNode.h"
 
 
-typedef enum {AVL_SUCCESS, AVL_NULL_ARG, AVL_KEY_NOT_FOUND, AVL_KEY_ALREADY_EXISTS} AVLTreeResult;
+typedef enum {AVL_SUCCESS, AVL_KEY_ALREADY_EXISTS, BALANCED, NOT_BALANCED} AVLTreeResult;
 typedef enum {PRE, IN, POST, REVERSE} AVLTreeOrderType;
 
 template<class K, class D>
@@ -28,7 +28,7 @@ private:
     AVLTreeResult rotateRL(TreeNode<K,D>* C);
 
     AVLTreeResult addNewNode(TreeNode<K,D>* new_node);
-    AVLTreeResult balanceTree(TreeNode<K,D>* new_node);
+    AVLTreeResult balanceNode(TreeNode<K,D>* curr);
 //TODO: replace with Adina's List
     AVLTreeResult getPreOrder(TreeNode<K,D>* root_node, std::list<D>* ordered_list);
     AVLTreeResult getInOrder(TreeNode<K, D> *root_node, list<D> *ordered_list);
@@ -45,10 +45,10 @@ public:
     int getSize();
     AVLTreeResult insert(K& key, D& data);
     //AVLTreeResult remove(const K& key);
-    //D* find(const K& key);
+    D* find(const K& key);
     void printAVLTree(AVLTreeOrderType type);
     //TODO: replace with Adina's List
-    AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> ordered_list);
+    AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> *ordered_list);
     AVLTreeResult getNLargestNodes(list<D> *ordered_list, int &n);
 };
 
@@ -150,7 +150,6 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
     D data = new_node->getData();
     TreeNode<K,D>* curr = this->root;
     bool new_biggest_node = true;
-    //TODO: create new fuc add_node(*root, *new_node)
     if(curr == nullptr){
         this->root = new_node;
         this->biggest_node = new_node;
@@ -163,7 +162,6 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
             return AVL_KEY_ALREADY_EXISTS;
         }
         else if(key>curr_key){
-            curr->hr++;
             if(curr->getRight() == nullptr){
                 curr->setRight(new_node);
                 if(new_biggest_node){
@@ -174,7 +172,6 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
             curr = curr->getRight();
         }
         else if(key<curr_key){
-            curr->hl++;
             new_biggest_node = false;
             if(curr->getLeft() == nullptr){
                 curr->setLeft(new_node);
@@ -187,47 +184,42 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
 }
 
 template<class K, class D>
-AVLTreeResult AVLTree<K, D>::balanceTree(TreeNode<K, D> *new_node) {
-    TreeNode<K,D>* curr = new_node;
-    while(curr != nullptr){
-        if(curr->getBf()==2){
-            if(curr->getLeft()->getBf() >= 0){
-                if(rotateLL(curr) == AVL_SUCCESS) break;
-                //TODO: delete before submission
-                else exit(1);
-            }
-            if(curr->getLeft()->getBf() == -1){
-                if(rotateLR(curr) == AVL_SUCCESS) break;
-                //TODO: delete before submission
-                else exit(1);
-            }
+AVLTreeResult AVLTree<K, D>::balanceNode(TreeNode<K, D> *curr) {
+    if(curr->getBf()==2){
+        if(curr->getLeft()->getBf() >= 0){
+            if(rotateLL(curr) == AVL_SUCCESS) return BALANCED;
             //TODO: delete before submission
-            else {
-                std::cout<<"wrong BF in "<<std::endl;
-                exit(1);
-            }
-
+            else exit(1);
         }
-        if(curr->getBf()==-2){
-            if(curr->getRight()->getBf() <= 0){
-                if(rotateRR(curr) == AVL_SUCCESS) break;
-                //TODO: delete before submission
-                else exit(0);
-            }
-            if(curr->getRight()->getBf() == 1){
-                if(rotateRL(curr) == AVL_SUCCESS) break;
-                //TODO: delete before submission
-                else exit(0);
-            }
+        if(curr->getLeft()->getBf() == -1){
+            if(rotateLR(curr) == AVL_SUCCESS) return BALANCED;
             //TODO: delete before submission
-            else {
-                std::cout<<"wrong BF in "<<std::endl;
-                exit(0);
-            }
+            else exit(1);
         }
-        curr = curr->getFather();
+        //TODO: delete before submission
+        else {
+            std::cout << "wrong BF in " << *curr << std::endl;
+            exit(1);
+        }
     }
-    return AVL_SUCCESS;
+    if(curr->getBf()==-2){
+        if(curr->getRight()->getBf() <= 0){
+            if(rotateRR(curr) == AVL_SUCCESS) return BALANCED;
+            //TODO: delete before submission
+            else exit(0);
+        }
+        if(curr->getRight()->getBf() == 1){
+            if(rotateRL(curr) == AVL_SUCCESS) return BALANCED;
+            //TODO: delete before submission
+            else exit(0);
+        }
+        //TODO: delete before submission
+        else {
+            std::cout << "wrong BF in " << *curr << std::endl;
+            exit(0);
+        }
+    }
+    return NOT_BALANCED;
 }
 
 template<class K, class D>
@@ -238,8 +230,23 @@ AVLTreeResult AVLTree<K,D>::insert(K& key, D& data){
         return add_result;
     }
     this->num_of_nodes++;
-    AVLTreeResult balance_result = balanceTree(new_node);
-    return balance_result;
+    AVLTreeResult balance_result = NOT_BALANCED;
+    TreeNode<K,D>* curr = new_node;
+    int son_key = curr->getKey();
+
+    for(curr = new_node->getFather(); curr != nullptr ;curr=curr->getFather()){
+        if(son_key>curr->getKey()){
+            curr->hr = curr->getRight()->getHeight();
+        }
+        else if(son_key<curr->getKey()){
+            curr->hl = curr->getLeft()->getHeight();
+        }
+        if(balance_result == NOT_BALANCED) {
+            balance_result = balanceNode(curr);
+        }
+        son_key = curr->getKey();
+    }
+    return AVL_SUCCESS;
 }
 
 
@@ -304,6 +311,7 @@ void AVLTree<K, D>::printAVLTree(AVLTreeOrderType type) {
     for(auto data : ordered_list){
         std::cout<<data<<", ";
     }
+    std::cout<<std::endl;
 }
 
 template<class K, class D>
@@ -323,7 +331,7 @@ AVLTreeResult AVLTree<K, D>::getNLargestNodes(list<D> *ordered_list, int &n) {
 }
 
 template<class K, class D>
-AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> ordered_list) {
+AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> *ordered_list) {
     switch(type){
         case PRE:
             getPreOrder(this->root, ordered_list);
@@ -337,9 +345,26 @@ AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> ordere
         case REVERSE:
             getReverseOrder(this->root, ordered_list, num_of_nodes);
     }
+    return AVL_SUCCESS;
 }
 
-
+template<class K, class D>
+D* AVLTree<K, D>::find(const K &key) {
+    TreeNode<K,D>* curr = root;
+    while(curr != nullptr){
+        K curr_key = curr->getKey();
+        if(curr_key == key){
+            return &(curr->getData());
+        }
+        else if(key<curr_key){
+            curr = curr->getLeft();
+        }
+        else if(key>curr_key){
+            curr = curr->getRight();
+        }
+    }
+    return nullptr;
+}
 
 
 #endif //AVLTREE_AVLTREE_H

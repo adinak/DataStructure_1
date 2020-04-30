@@ -7,69 +7,83 @@
 
 #include <iostream>
 #include <cassert>
+#include <cstdlib>
+#include <ctime>
 #include "AVLTree.h"
 #include "vector"
+#include "set"
+#include "list"
 using namespace std;
 
 typedef enum {SUCCESS, FAIL} Test_result;
 
 #define TEST(i) testi()
 
+void print(list<int> a){
+    cout<<"(";
+    for(int x : a){
+        cout<<x<<", ";
+    }
+    cout<<")"<<endl;
+}
+
 class TestAVLTree {
 private:
-    Test_result test1();
+    Test_result testInsertFunction();
     Test_result test2();
     Test_result test3();
+    Test_result testFindFunction();
 public:
-    TestAVLTree() = default;
+    TestAVLTree(){
+        srand (time(nullptr));
+    };
     ~TestAVLTree() = default;
     Test_result test();
 
 };
 
-
-
-Test_result TestAVLTree::test1() {
-    vector<TreeNode<int,char>*> nodes;
-    TreeNode<int,char> A(2,'A');
-    nodes.push_back(&A);
-    TreeNode<int,char> AL(3,'L');
-    nodes.push_back(&AL);
-    TreeNode<int,char> AR(4,'R');
-    nodes.push_back(&AR);
-    TreeNode<int,char> B(1,'B');
-    nodes.push_back(&B);
-    TreeNode<int,char> BL(5,'L');
-    nodes.push_back(&BL);
-    TreeNode<int,char> BR(6,'R');
-    nodes.push_back(&BR);
-    TreeNode<int,char> C(0,'C');
-    nodes.push_back(&C);
-    TreeNode<int,char> CL(7,'L');
-    nodes.push_back(&CL);
-    TreeNode<int,char> CR(8,'R');
-    nodes.push_back(&CL);
-    TreeNode<int,char> N(3,'n');
-    nodes.push_back(&N);
-
-    AL.setLeft(&N);
-    A.setLeft(&AL);
-    A.setRight(&AR);
-    B.setRight(&A);
-    B.setLeft(&BL);
-    C.setLeft(&B);
-    C.setRight(&CR);
-
-    for(auto node : nodes){
-        cout<<*node<<", "<<"hl:"<<node->hl<<", hr:"<<node->hr<<", BF:"<<node->getBf()<<endl;
-    }
+Test_result TestAVLTree::test() {
+    assert(testInsertFunction() == SUCCESS);
+    cout<<"testInsertFunction - SUCCESS"<<endl;
+    //assert(test2() == SUCCESS);
+    //assert(test3() == SUCCESS);
+    //assert(testFindFunction() == SUCCESS);
     return SUCCESS;
 }
 
-Test_result TestAVLTree::test() {
-    //assert(test1() == SUCCESS);
-    //assert(test2() == SUCCESS);
-    assert(test3() == SUCCESS);
+Test_result TestAVLTree::testInsertFunction() {
+    AVLTree<int,int> tree;
+    list<int> tester;
+    list<int> result;
+    int num_of_numbers = 10000;
+    int random_range = 1000000;
+
+    for(int i=0;i<num_of_numbers; i++){
+        int num = (rand()%random_range);
+        tester.push_back(num);
+        result.push_back(num);
+    }
+    result.sort();
+    result.unique();
+//  cout<<"old_tester = ";
+//  print(tester);
+//  cout<<"result = ";
+//  print(result);
+    int i=0;
+    while(!tester.empty()) {
+        tree.insert(tester.back(), tester.back());
+        tester.pop_back();
+        i++;
+    }
+    tester.clear();
+    tree.getTreeToList(IN, &tester);
+    if(tester != result){
+        cout<<"tree IN order = ";
+        tree.printAVLTree(IN);
+        cout<<"new_tester = ";
+        print(tester);
+        return FAIL;
+    }
     return SUCCESS;
 }
 
@@ -94,6 +108,23 @@ Test_result TestAVLTree::test3() {
         cout<<n<<" ,";
     }
     return SUCCESS;
+}
+
+Test_result TestAVLTree::testFindFunction() {
+    AVLTree<int,int> tree;
+    bool result = true;
+    for(int i=25;i>0;i--){
+        tree.insert(i,i);
+    }
+    int *a;
+    for(int i=1; i<26; i++){
+        a = tree.find(i);
+        if(*a!=i) {
+            return FAIL;
+        }
+    }
+    return SUCCESS;
+
 }
 
 
