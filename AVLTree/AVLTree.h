@@ -38,9 +38,10 @@ private:
 
     AVLTreeResult swapNodes(TreeNode<K,D>* a, TreeNode<K,D>* b);
     TreeNode<K, D> * deleteNode(TreeNode<K, D> *node_to_delete);
-    AVLTreeResult deleteNodeWithTwoChildren(TreeNode<K,D>* node_to_delete);
+    TreeNode<K, D> * deleteNodeWithTwoChildren(TreeNode<K,D>* node_to_delete);
     TreeNode<K,D>* findNode(const K& key);
 
+    bool checkSum(TreeNode<K, D> *node);
     //TODO:delete when done testing
     friend class TestAVLTree;
 
@@ -367,35 +368,41 @@ D* AVLTree<K, D>::find(const K &key) {
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
-    if(a->getHeight()>b->getHeight()){
-        TreeNode<K,D>* tmp = b;
-        b=a;
-        a=tmp;
-    }
-    //tmp = b
-    TreeNode<K,D>* b_father = b->getFather();
-    TreeNode<K,D>* b_left = b->getLeft();
-    TreeNode<K,D>* b_right = b->getRight();
-    K b_key = b->getKey();
-    if(this->biggest_node->getKey() == b_key){
-        this->biggest_node = a;
-    }
-    if(this->biggest_node->getKey() == a->getKey()){
-        this->biggest_node = b;
-    }
-    //b = a
-    b->setLeft(a->getLeft());
-    b->setRight(a->getRight());
-    a->getFather()->setSon(b);
-    //a = tmp
-    a->setLeft(b_left);
-    a->setRight(b_right);
-    if(b_father != nullptr) {
-        b_father->setSon(a);
-    }
-    else{
-        this->root = a;
-    }
+    K tmp_key = b->getKey();
+    D tmp_data = b->getData();
+    b->key = a->getKey();
+    b->data = a->getData();
+    a->key = tmp_key;
+    a->data = tmp_data;
+    //    if(a->getHeight()>b->getHeight()){
+//        TreeNode<K,D>* tmp = b;
+//        b=a;
+//        a=tmp;
+//    }
+//    //tmp = b
+//    TreeNode<K,D>* b_father = b->getFather();
+//    TreeNode<K,D>* b_left = b->getLeft();
+//    TreeNode<K,D>* b_right = b->getRight();
+//    K b_key = b->getKey();
+//    if(this->biggest_node->getKey() == b_key){
+//        this->biggest_node = a;
+//    }
+//    if(this->biggest_node->getKey() == a->getKey()){
+//        this->biggest_node = b;
+//    }
+//    //b = a
+//    b->setLeft(a->getLeft());
+//    b->setRight(a->getRight());
+//    a->getFather()->setSon(b);
+//    //a = tmp
+//    a->setLeft(b_left);
+//    a->setRight(b_right);
+//    if(b_father != nullptr) {
+//        b_father->setSon(a);
+//    }
+//    else{
+//        this->root = a;
+//    }
     return AVL_SUCCESS;
 }
 
@@ -408,6 +415,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
         dead = node_to_delete;
         if(father == nullptr){
             this->root = node_to_delete->getLeft();
+            this->root->father = nullptr;
         }
         else{
             father->setSon(node_to_delete->getLeft());
@@ -423,12 +431,12 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
     }
     else if (node_to_delete->getLeft() == nullptr && node_to_delete->getRight() != nullptr) {
         dead = node_to_delete;
-        node_to_delete = node_to_delete->getRight();
         if(father == nullptr){
-            this->root = node_to_delete->getLeft();
+            this->root = node_to_delete->getRight();
+            this->root->father = nullptr;
         }
         else{
-            father->setSon(node_to_delete->getLeft());
+            father->setSon(node_to_delete->getRight());
         }
         delete dead;
         return node_to_delete;
@@ -438,7 +446,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
         if(father == nullptr){
             this->root = nullptr;
         }
-        else if(node_to_delete->key > father->getKey()){
+        else if(father->getRight() && (node_to_delete->key == father->getRight()->getKey())){
             father->setRight(nullptr);
         }
         else{
@@ -451,21 +459,20 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
         return father;
     }
     else {
-        deleteNodeWithTwoChildren(node_to_delete);
+        return deleteNodeWithTwoChildren(node_to_delete);
     }
     return nullptr;
 }
 
 template<class K, class D>
-AVLTreeResult AVLTree<K, D>::deleteNodeWithTwoChildren(TreeNode<K, D> *node_to_delete) {
+TreeNode<K, D> * AVLTree<K, D>::deleteNodeWithTwoChildren(TreeNode<K, D> *node_to_delete) {
     TreeNode<K,D>* curr = node_to_delete;
     curr = curr->getRight();
     while(curr->getLeft()!=nullptr){
         curr = curr->getLeft();
     }
     swapNodes(curr, node_to_delete);
-    deleteNode(curr);
-    return AVL_SUCCESS;
+    return deleteNode(curr);
 }
 
 template<class K, class D>
@@ -490,6 +497,13 @@ AVLTreeResult AVLTree<K, D>::remove(const K &key) {
         balanceNode(curr);
         son_key = curr->getKey();
     }
+}
+
+template<class K, class D>
+bool AVLTree<K, D>::checkSum(TreeNode<K, D> *node) {
+    if(node == nullptr) return true;
+    if(node->getBf()>1 || node->getBf()<-1) return false;
+    return (checkSum(node->getRight())&&checkSum(node->getLeft()));
 }
 
 

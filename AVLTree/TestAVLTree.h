@@ -87,18 +87,25 @@ Test_result TestAVLTree::testInsertFunction() {
         print(tester);
         return FAIL;
     }
+    assert(tree.checkSum(tree.root));
     return SUCCESS;
 }
 
 Test_result TestAVLTree::testRemoveFunction() {
-    AVLTree<int,int> tree;
-    for(int i=1;i<3;i++){
-        tree.insert(i,i);
+    list<int> in_order_list;
+    AVLTree<int,int>* tree = createRandomTree(100,1000, &in_order_list);
+    list<int> result;
+    tree->getTreeToList(IN, &result);
+    assert(result == in_order_list);
+    while(!in_order_list.empty()){
+        int a = in_order_list.front();
+        tree->remove(a);
+        assert(tree->checkSum(tree->root));
+        in_order_list.pop_front();
+        result.clear();
+        tree->getTreeToList(IN, &result);
+        assert(result == in_order_list);
     }
-    tree.printAVLTree(IN);
-    tree.remove(2);
-    tree.printAVLTree(IN);
-    tree.remove(1);
     return SUCCESS;
 }
 
@@ -118,18 +125,18 @@ Test_result TestAVLTree::test3() {
 
 Test_result TestAVLTree::testFindFunction() {
     Test_result result = SUCCESS;
-    list<int>* in_order_list = new list<int>();
-    AVLTree<int,int>* tree = createRandomTree(100, 1000, in_order_list);
-    int *a;
-    while(!in_order_list->empty()){
-        *a = in_order_list->front();
-        int b = *tree->find(*a);
-        if(*a != b){
+    list<int> in_order_list;
+    AVLTree<int,int>* tree = createRandomTree(100, 1000, &in_order_list);
+    int a;
+    while(!in_order_list.empty()){
+        a = in_order_list.front();
+        in_order_list.pop_front();
+        int b = *tree->find(a);
+        if(a != b){
           result = FAIL;
           break;
         }
     }
-    delete in_order_list;
     delete tree;
     return result;
 
@@ -138,14 +145,13 @@ Test_result TestAVLTree::testFindFunction() {
 AVLTree<int, int> *TestAVLTree::createRandomTree(int num_of_numbers, int random_range, list<int>* in_order_list) {
     AVLTree<int,int>* tree = new AVLTree<int,int>();
     list<int> tester;
-    list<int> result = *in_order_list;
     for(int i=0;i<num_of_numbers; i++){
         int num = (rand()%random_range);
         tester.push_back(num);
-        result.push_back(num);
+        in_order_list->push_back(num);
     }
-    result.sort();
-    result.unique();
+    in_order_list->sort();
+    in_order_list->unique();
     int i=0;
     while(!tester.empty()) {
         tree->insert(tester.back(), tester.back());

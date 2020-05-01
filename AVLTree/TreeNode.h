@@ -125,7 +125,7 @@ std::ostream &operator<<(ostream &os, const TreeNode<KEY,DATA> &node) {
 
 template<class K, class D>
 void TreeNode<K, D>::setSon(TreeNode<K, D> *next) {
-    if(this->key > next->key) {
+    if(next->key > this->key) {
         this->setRight(next);
     }
     else {
