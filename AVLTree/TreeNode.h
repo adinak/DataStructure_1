@@ -28,6 +28,7 @@ private:
     TreeNode* getFather();
     void setRight(TreeNode<K,D>* next);
     void setLeft(TreeNode<K,D>* next);
+    void setSon(TreeNode<K,D>* next);
 
 
     template<class KEY,class DATA>
@@ -120,6 +121,16 @@ template<class KEY, class DATA>
 std::ostream &operator<<(ostream &os, const TreeNode<KEY,DATA> &node) {
     os<<"("<<node.key<<", "<<node.data<<")";
     return os;
+}
+
+template<class K, class D>
+void TreeNode<K, D>::setSon(TreeNode<K, D> *next) {
+    if(this->key > next->key) {
+        this->setRight(next);
+    }
+    else {
+        this->setLeft(next);
+    }
 }
 
 

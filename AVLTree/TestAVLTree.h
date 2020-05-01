@@ -29,10 +29,12 @@ void print(list<int> a){
 
 class TestAVLTree {
 private:
+    AVLTree<int,int>* createRandomTree(int num_of_numbers, int random_range, list<int>* in_order_list);
+    AVLTree<int,int>* createRandomTree(int num_of_numbers, int random_range);
     Test_result testInsertFunction();
-    Test_result test2();
-    Test_result test3();
     Test_result testFindFunction();
+    Test_result testRemoveFunction();
+    Test_result test3();
 public:
     TestAVLTree(){
         srand (time(nullptr));
@@ -45,9 +47,11 @@ public:
 Test_result TestAVLTree::test() {
     assert(testInsertFunction() == SUCCESS);
     cout<<"testInsertFunction - SUCCESS"<<endl;
-    //assert(test2() == SUCCESS);
     //assert(test3() == SUCCESS);
-    //assert(testFindFunction() == SUCCESS);
+    assert(testFindFunction() == SUCCESS);
+    cout<<"testFindFunction - SUCCESS"<<endl;
+    assert(testRemoveFunction() == SUCCESS);
+    cout<<"testInsertFunction - SUCCESS"<<endl;
     return SUCCESS;
 }
 
@@ -57,7 +61,6 @@ Test_result TestAVLTree::testInsertFunction() {
     list<int> result;
     int num_of_numbers = 10000;
     int random_range = 1000000;
-
     for(int i=0;i<num_of_numbers; i++){
         int num = (rand()%random_range);
         tester.push_back(num);
@@ -87,12 +90,15 @@ Test_result TestAVLTree::testInsertFunction() {
     return SUCCESS;
 }
 
-Test_result TestAVLTree::test2() {
+Test_result TestAVLTree::testRemoveFunction() {
     AVLTree<int,int> tree;
-    for(int i=7;i>0;i--){
+    for(int i=1;i<3;i++){
         tree.insert(i,i);
     }
     tree.printAVLTree(IN);
+    tree.remove(2);
+    tree.printAVLTree(IN);
+    tree.remove(1);
     return SUCCESS;
 }
 
@@ -111,20 +117,56 @@ Test_result TestAVLTree::test3() {
 }
 
 Test_result TestAVLTree::testFindFunction() {
-    AVLTree<int,int> tree;
-    bool result = true;
-    for(int i=25;i>0;i--){
-        tree.insert(i,i);
-    }
+    Test_result result = SUCCESS;
+    list<int>* in_order_list = new list<int>();
+    AVLTree<int,int>* tree = createRandomTree(100, 1000, in_order_list);
     int *a;
-    for(int i=1; i<26; i++){
-        a = tree.find(i);
-        if(*a!=i) {
-            return FAIL;
+    while(!in_order_list->empty()){
+        *a = in_order_list->front();
+        int b = *tree->find(*a);
+        if(*a != b){
+          result = FAIL;
+          break;
         }
     }
-    return SUCCESS;
+    delete in_order_list;
+    delete tree;
+    return result;
 
+}
+
+AVLTree<int, int> *TestAVLTree::createRandomTree(int num_of_numbers, int random_range, list<int>* in_order_list) {
+    AVLTree<int,int>* tree = new AVLTree<int,int>();
+    list<int> tester;
+    list<int> result = *in_order_list;
+    for(int i=0;i<num_of_numbers; i++){
+        int num = (rand()%random_range);
+        tester.push_back(num);
+        result.push_back(num);
+    }
+    result.sort();
+    result.unique();
+    int i=0;
+    while(!tester.empty()) {
+        tree->insert(tester.back(), tester.back());
+        tester.pop_back();
+        i++;
+    }
+    return tree;
+}
+
+AVLTree<int, int> *TestAVLTree::createRandomTree(int num_of_numbers, int random_range) {
+    AVLTree<int,int>* tree = new AVLTree<int,int>();
+    list<int> tester;
+    for(int i=0;i<num_of_numbers; i++){
+        int num = (rand()%random_range);
+        tester.push_back(num);
+    }
+    while(!tester.empty()) {
+        tree->insert(tester.back(), tester.back());
+        tester.pop_back();
+    }
+    return tree;
 }
 
 

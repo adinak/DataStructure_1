@@ -12,7 +12,8 @@ using std::list;
 #include "TreeNode.h"
 
 
-typedef enum {AVL_SUCCESS, AVL_KEY_ALREADY_EXISTS, BALANCED, NOT_BALANCED} AVLTreeResult;
+typedef enum {AVL_SUCCESS, AVL_KEY_ALREADY_EXISTS, AVL_KEY_NOT_EXISTS,
+                                        BALANCED, NOT_BALANCED} AVLTreeResult;
 typedef enum {PRE, IN, POST, REVERSE} AVLTreeOrderType;
 
 template<class K, class D>
@@ -35,6 +36,10 @@ private:
     AVLTreeResult getPostOrder(TreeNode<K, D> *root_node, list<D> *ordered_list);
     AVLTreeResult getReverseOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n);
 
+    AVLTreeResult swapNodes(TreeNode<K,D>* a, TreeNode<K,D>* b);
+    TreeNode<K, D> * deleteNode(TreeNode<K, D> *node_to_delete);
+    AVLTreeResult deleteNodeWithTwoChildren(TreeNode<K,D>* node_to_delete);
+    TreeNode<K,D>* findNode(const K& key);
 
     //TODO:delete when done testing
     friend class TestAVLTree;
@@ -44,7 +49,7 @@ public:
     ~AVLTree() = default;
     int getSize();
     AVLTreeResult insert(K& key, D& data);
-    //AVLTreeResult remove(const K& key);
+    AVLTreeResult remove(const K& key);
     D* find(const K& key);
     void printAVLTree(AVLTreeOrderType type);
     //TODO: replace with Adina's List
@@ -295,19 +300,7 @@ AVLTreeResult AVLTree<K, D>::getReverseOrder(TreeNode<K, D> *root_node, list<D> 
 template<class K, class D>
 void AVLTree<K, D>::printAVLTree(AVLTreeOrderType type) {
     list<D> ordered_list;
-    switch(type){
-        case PRE:
-            getPreOrder(this->root, &ordered_list);
-            break;
-        case IN:
-            getInOrder(this->root, &ordered_list);
-            break;
-        case POST:
-            getPostOrder(this->root, &ordered_list);
-            break;
-        case REVERSE:
-            getReverseOrder(this->root, &ordered_list, num_of_nodes);
-    }
+    getTreeToList(type, &ordered_list);
     for(auto data : ordered_list){
         std::cout<<data<<", ";
     }
@@ -349,12 +342,12 @@ AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> *order
 }
 
 template<class K, class D>
-D* AVLTree<K, D>::find(const K &key) {
+TreeNode<K, D>* AVLTree<K, D>::findNode(const K &key) {
     TreeNode<K,D>* curr = root;
     while(curr != nullptr){
         K curr_key = curr->getKey();
         if(curr_key == key){
-            return &(curr->getData());
+            return curr;
         }
         else if(key<curr_key){
             curr = curr->getLeft();
@@ -364,6 +357,139 @@ D* AVLTree<K, D>::find(const K &key) {
         }
     }
     return nullptr;
+}
+
+template<class K, class D>
+D* AVLTree<K, D>::find(const K &key) {
+    TreeNode<K,D>* node_to_find = findNode(key);
+    return &node_to_find->getData();
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
+    if(a->getHeight()>b->getHeight()){
+        TreeNode<K,D>* tmp = b;
+        b=a;
+        a=tmp;
+    }
+    //tmp = b
+    TreeNode<K,D>* b_father = b->getFather();
+    TreeNode<K,D>* b_left = b->getLeft();
+    TreeNode<K,D>* b_right = b->getRight();
+    K b_key = b->getKey();
+    if(this->biggest_node->getKey() == b_key){
+        this->biggest_node = a;
+    }
+    if(this->biggest_node->getKey() == a->getKey()){
+        this->biggest_node = b;
+    }
+    //b = a
+    b->setLeft(a->getLeft());
+    b->setRight(a->getRight());
+    a->getFather()->setSon(b);
+    //a = tmp
+    a->setLeft(b_left);
+    a->setRight(b_right);
+    if(b_father != nullptr) {
+        b_father->setSon(a);
+    }
+    else{
+        this->root = a;
+    }
+    return AVL_SUCCESS;
+}
+
+template<class K, class D>
+TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
+    TreeNode<K,D> *dead;
+    TreeNode<K,D>* father = node_to_delete->getFather();
+    bool biggest = (this->biggest_node->getKey() == node_to_delete->getKey());
+    if (node_to_delete->getLeft() != nullptr && node_to_delete->getRight() == nullptr) {
+        dead = node_to_delete;
+        if(father == nullptr){
+            this->root = node_to_delete->getLeft();
+        }
+        else{
+            father->setSon(node_to_delete->getLeft());
+        }
+        if(biggest){
+            this->biggest_node = this->biggest_node->getLeft();
+            while(this->biggest_node->getRight() != nullptr) {
+                this->biggest_node = this->biggest_node->getRight();
+            }
+        }
+        delete dead;
+        return node_to_delete;
+    }
+    else if (node_to_delete->getLeft() == nullptr && node_to_delete->getRight() != nullptr) {
+        dead = node_to_delete;
+        node_to_delete = node_to_delete->getRight();
+        if(father == nullptr){
+            this->root = node_to_delete->getLeft();
+        }
+        else{
+            father->setSon(node_to_delete->getLeft());
+        }
+        delete dead;
+        return node_to_delete;
+    }
+    else if (node_to_delete->getLeft() == nullptr && node_to_delete->getRight() == nullptr) {
+        dead = node_to_delete;
+        if(father == nullptr){
+            this->root = nullptr;
+        }
+        else if(node_to_delete->key > father->getKey()){
+            father->setRight(nullptr);
+        }
+        else{
+            father->setLeft(nullptr);
+        }
+        if(biggest){
+            this->biggest_node = father;
+        }
+        delete dead;
+        return father;
+    }
+    else {
+        deleteNodeWithTwoChildren(node_to_delete);
+    }
+    return nullptr;
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::deleteNodeWithTwoChildren(TreeNode<K, D> *node_to_delete) {
+    TreeNode<K,D>* curr = node_to_delete;
+    curr = curr->getRight();
+    while(curr->getLeft()!=nullptr){
+        curr = curr->getLeft();
+    }
+    swapNodes(curr, node_to_delete);
+    deleteNode(curr);
+    return AVL_SUCCESS;
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::remove(const K &key) {
+    TreeNode<K,D>* node_to_delete = findNode(key);
+    if(node_to_delete== nullptr){
+        return AVL_KEY_NOT_EXISTS;
+    }
+    TreeNode<K,D>* curr = deleteNode(node_to_delete);
+    this->num_of_nodes--;
+    int son_key;
+    if(curr != nullptr){
+        son_key= curr->getKey();
+    }
+    for(; curr != nullptr ;curr=curr->getFather()){
+        if(son_key>curr->getKey()){
+            curr->hr = curr->getRight()->getHeight();
+        }
+        else if(son_key<curr->getKey()){
+            curr->hl = curr->getLeft()->getHeight();
+        }
+        balanceNode(curr);
+        son_key = curr->getKey();
+    }
 }
 
 
