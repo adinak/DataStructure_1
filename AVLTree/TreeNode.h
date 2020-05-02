@@ -31,8 +31,8 @@ private:
     void setSon(TreeNode<K,D>* next);
 
 
-    template<class KEY,class DATA>
-    friend std::ostream& operator<<(std::ostream& os, const TreeNode<KEY,DATA> &node);
+//    template<class KEY,class DATA>
+//    friend std::ostream& operator<<(std::ostream& os, const TreeNode<KEY,DATA> &node);
     template <class KEY,class DATA>
     friend class AVLTree;
 
@@ -116,12 +116,12 @@ template<class K, class D>
 int TreeNode<K, D>::getBf() {
     return (this->hl-this->hr);
 }
-
-template<class KEY, class DATA>
-std::ostream &operator<<(ostream &os, const TreeNode<KEY,DATA> &node) {
-    os<<"("<<node.key<<", "<<node.data<<")";
-    return os;
-}
+//
+//template<class KEY, class DATA>
+//std::ostream &operator<<(ostream &os, const TreeNode<KEY,DATA> &node) {
+//    os<<"("<<node.key<<", "<<node.data<<")";
+//    return os;
+//}
 
 template<class K, class D>
 void TreeNode<K, D>::setSon(TreeNode<K, D> *next) {

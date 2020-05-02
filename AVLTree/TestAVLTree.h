@@ -34,6 +34,7 @@ private:
     Test_result testRemoveFunction();
     Test_result testMemoryLeaks();
     Test_result testEdgeCases();
+    Test_result testDoSomething();
 public:
     TestAVLTree(){
         srand (time(nullptr));
@@ -54,6 +55,8 @@ Test_result TestAVLTree::test() {
     testMemoryLeaks();
     assert(testEdgeCases()==SUCCESS);
     cout<<"testEdgeCases - SUCCESS"<<endl;
+    assert(testDoSomething() == SUCCESS);
+    cout<<"testDoSomething - SUCCESS"<<endl;
     return SUCCESS;
 }
 
@@ -189,8 +192,41 @@ Test_result TestAVLTree::testEdgeCases() {
     for(int i=10; i<20; i++){
         assert(tree.remove(i) == AVL_KEY_NOT_EXISTS);
     }
-    return SUCCESS;
+    list<int> lst;
 
+    AVLTree<int,int>* tree2 = createRandomTree(100,10000, &lst);
+    list<int> result;
+    int a = 5;
+    tree2->getNLargestNodes(&result, a);
+    while(!result.empty()){
+        assert(lst.back() == result.front());
+        lst.pop_back();
+        result.pop_front();
+    }
+    delete tree2;
+    return SUCCESS;
+}
+
+Test_result TestAVLTree::testDoSomething() {
+    class doSomething{
+    public:
+        doSomething() = default;
+        ~doSomething() = default;
+        void operator()(AVLTree<int,int>* inside_tree, int &n){
+            list<int> biggest_list;
+            inside_tree->getNLargestNodes(&biggest_list,n);
+            print(biggest_list);
+        }
+    };
+    AVLTree<int,AVLTree<int,int>*> tree;
+    for(int i =0;i<4;i++){
+        AVLTree<int,int>* tmp_tree = createRandomTree(3,10);
+        tree.insert(i,tmp_tree);
+    }
+    doSomething func;
+    int a=5;
+    tree.doSomethingToNLargestNodes(func, a);
+    return SUCCESS;
 }
 
 

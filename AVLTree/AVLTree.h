@@ -43,6 +43,9 @@ private:
 
     AVLTreeResult clearTree(TreeNode<K, D> *root_node);
 
+    template<typename Function>
+    AVLTreeResult doSomethingInReverseOrder(Function doSomething, int &n, TreeNode<K,D>* node);
+
     bool checkSum(TreeNode<K, D> *node);
 
     //TODO:delete when done testing
@@ -60,7 +63,7 @@ public:
     AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> *ordered_list);
     AVLTreeResult getNLargestNodes(list<D> *ordered_list, int &n);
     template<typename Function>
-    AVLTreeResult doSomthingToNLargestNodes(Function doSomthing, int &n);
+    AVLTreeResult doSomethingToNLargestNodes(Function doSomething, int &n);
 
     AVLTreeResult clear();
 
@@ -210,35 +213,17 @@ AVLTreeResult AVLTree<K, D>::balanceNode(TreeNode<K, D> *curr) {
     if(curr->getBf()==2){
         if(curr->getLeft()->getBf() >= 0){
             if(rotateLL(curr) == AVL_SUCCESS) return BALANCED;
-            //TODO: delete before submission
-            else exit(1);
         }
         if(curr->getLeft()->getBf() == -1){
             if(rotateLR(curr) == AVL_SUCCESS) return BALANCED;
-            //TODO: delete before submission
-            else exit(1);
-        }
-        //TODO: delete before submission
-        else {
-            std::cout << "wrong BF in " << *curr << std::endl;
-            exit(1);
         }
     }
     if(curr->getBf()==-2){
         if(curr->getRight()->getBf() <= 0){
             if(rotateRR(curr) == AVL_SUCCESS) return BALANCED;
-            //TODO: delete before submission
-            else exit(0);
         }
         if(curr->getRight()->getBf() == 1){
             if(rotateRL(curr) == AVL_SUCCESS) return BALANCED;
-            //TODO: delete before submission
-            else exit(0);
-        }
-        //TODO: delete before submission
-        else {
-            std::cout << "wrong BF in " << *curr << std::endl;
-            exit(0);
         }
     }
     return NOT_BALANCED;
@@ -329,7 +314,6 @@ template<class K, class D>
 AVLTreeResult AVLTree<K, D>::getNLargestNodes(list<D> *ordered_list, int &n) {
     TreeNode<K,D>* curr = biggest_node;
     if(curr == nullptr) return AVL_SUCCESS;
-
     getReverseOrder(curr, ordered_list, n);
     curr = curr->getFather();
     while(curr!= nullptr && n > 0){
@@ -547,8 +531,27 @@ AVLTreeResult AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
 
 template<class K, class D>
 template<typename Function>
-AVLTreeResult AVLTree<K, D>::doSomthingToNLargestNodes(Function doSomthing, int &n) {
+AVLTreeResult AVLTree<K, D>::doSomethingToNLargestNodes(Function doSomething, int &n) {
+    TreeNode<K,D>* curr = biggest_node;
+    if(curr == nullptr) return AVL_SUCCESS;
+    doSomethingInReverseOrder(doSomething, n, curr);
+    curr = curr->getFather();
+    while(curr!= nullptr && n > 0){
+        doSomething(curr->getData(), n);
+        doSomethingInReverseOrder(doSomething, n, curr->getLeft());
+        curr = curr->getFather();
+    }
+    return AVL_SUCCESS;
+}
 
+template<class K, class D>
+template<typename Function>
+AVLTreeResult AVLTree<K, D>::doSomethingInReverseOrder(Function doSomething, int &n, TreeNode<K, D> *node) {
+    if(node == nullptr || n == 0) return AVL_SUCCESS;
+    doSomethingInReverseOrder(doSomething, n, node->getRight());
+    if(n == 0) return AVL_SUCCESS;
+    doSomething(node->getData(), n);
+    doSomethingInReverseOrder(doSomething, n, node->getLeft());
 }
 
 
