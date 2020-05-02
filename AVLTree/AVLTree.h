@@ -41,13 +41,16 @@ private:
     TreeNode<K, D> * deleteNodeWithTwoChildren(TreeNode<K,D>* node_to_delete);
     TreeNode<K,D>* findNode(const K& key);
 
+    AVLTreeResult clearTree(TreeNode<K, D> *root_node);
+
     bool checkSum(TreeNode<K, D> *node);
+
     //TODO:delete when done testing
     friend class TestAVLTree;
 
 public:
     AVLTree():root(nullptr), biggest_node(nullptr), num_of_nodes(0) {};
-    ~AVLTree() = default;
+    ~AVLTree();
     int getSize();
     AVLTreeResult insert(K& key, D& data);
     AVLTreeResult remove(const K& key);
@@ -56,7 +59,21 @@ public:
     //TODO: replace with Adina's List
     AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> *ordered_list);
     AVLTreeResult getNLargestNodes(list<D> *ordered_list, int &n);
+    template<typename Function>
+    AVLTreeResult doSomthingToNLargestNodes(Function doSomthing, int &n);
+
+    AVLTreeResult clear();
+
 };
+
+template<class K, class D>
+AVLTree<K, D>::~AVLTree() {
+    clearTree(this->root);
+    num_of_nodes = 0;
+    this->root = nullptr;
+    this->biggest_node = nullptr;
+}
+
 
 template<class K, class D>
 int AVLTree<K, D>::getSize() {
@@ -164,7 +181,6 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
     while(curr!= nullptr){
         int curr_key = curr->getKey();
         if(curr_key==key) {
-            delete new_node;
             return AVL_KEY_ALREADY_EXISTS;
         }
         else if(key>curr_key){
@@ -233,6 +249,7 @@ AVLTreeResult AVLTree<K,D>::insert(K& key, D& data){
     TreeNode<K,D>* new_node = new TreeNode<K,D>(key,data);
     AVLTreeResult add_result = addNewNode(new_node);
     if(add_result != AVL_SUCCESS){
+        delete new_node;
         return add_result;
     }
     this->num_of_nodes++;
@@ -363,6 +380,9 @@ TreeNode<K, D>* AVLTree<K, D>::findNode(const K &key) {
 template<class K, class D>
 D* AVLTree<K, D>::find(const K &key) {
     TreeNode<K,D>* node_to_find = findNode(key);
+    if(node_to_find == nullptr){
+        return nullptr;
+    }
     return &node_to_find->getData();
 }
 
@@ -374,6 +394,8 @@ AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
     b->data = a->getData();
     a->key = tmp_key;
     a->data = tmp_data;
+    //TODO: delete before submition
+
     //    if(a->getHeight()>b->getHeight()){
 //        TreeNode<K,D>* tmp = b;
 //        b=a;
@@ -408,7 +430,7 @@ AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
 
 template<class K, class D>
 TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
-    TreeNode<K,D> *dead;
+    TreeNode<K,D>* dead;
     TreeNode<K,D>* father = node_to_delete->getFather();
     bool biggest = (this->biggest_node->getKey() == node_to_delete->getKey());
     if (node_to_delete->getLeft() != nullptr && node_to_delete->getRight() == nullptr) {
@@ -427,7 +449,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
             }
         }
         delete dead;
-        return node_to_delete;
+        return father;
     }
     else if (node_to_delete->getLeft() == nullptr && node_to_delete->getRight() != nullptr) {
         dead = node_to_delete;
@@ -439,7 +461,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
             father->setSon(node_to_delete->getRight());
         }
         delete dead;
-        return node_to_delete;
+        return father;
     }
     else if (node_to_delete->getLeft() == nullptr && node_to_delete->getRight() == nullptr) {
         dead = node_to_delete;
@@ -461,7 +483,6 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
     else {
         return deleteNodeWithTwoChildren(node_to_delete);
     }
-    return nullptr;
 }
 
 template<class K, class D>
@@ -504,6 +525,30 @@ bool AVLTree<K, D>::checkSum(TreeNode<K, D> *node) {
     if(node == nullptr) return true;
     if(node->getBf()>1 || node->getBf()<-1) return false;
     return (checkSum(node->getRight())&&checkSum(node->getLeft()));
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::clear() {
+    clearTree(this->root);
+    num_of_nodes = 0;
+    this->root = nullptr;
+    this->biggest_node = nullptr;
+    return AVL_SUCCESS;
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
+    if(root_node == nullptr) return AVL_SUCCESS;
+    clearTree(root_node->getLeft());
+    clearTree(root_node->getRight());
+    delete root_node;
+    return AVL_SUCCESS;
+}
+
+template<class K, class D>
+template<typename Function>
+AVLTreeResult AVLTree<K, D>::doSomthingToNLargestNodes(Function doSomthing, int &n) {
+
 }
 
 

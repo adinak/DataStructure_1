@@ -17,8 +17,6 @@ using namespace std;
 
 typedef enum {SUCCESS, FAIL} Test_result;
 
-#define TEST(i) testi()
-
 void print(list<int> a){
     cout<<"(";
     for(int x : a){
@@ -34,7 +32,8 @@ private:
     Test_result testInsertFunction();
     Test_result testFindFunction();
     Test_result testRemoveFunction();
-    Test_result test3();
+    Test_result testMemoryLeaks();
+    Test_result testEdgeCases();
 public:
     TestAVLTree(){
         srand (time(nullptr));
@@ -47,11 +46,14 @@ public:
 Test_result TestAVLTree::test() {
     assert(testInsertFunction() == SUCCESS);
     cout<<"testInsertFunction - SUCCESS"<<endl;
-    //assert(test3() == SUCCESS);
+    //assert(testMemoryLeaks() == SUCCESS);
     assert(testFindFunction() == SUCCESS);
     cout<<"testFindFunction - SUCCESS"<<endl;
     assert(testRemoveFunction() == SUCCESS);
     cout<<"testInsertFunction - SUCCESS"<<endl;
+    testMemoryLeaks();
+    assert(testEdgeCases()==SUCCESS);
+    cout<<"testEdgeCases - SUCCESS"<<endl;
     return SUCCESS;
 }
 
@@ -106,19 +108,17 @@ Test_result TestAVLTree::testRemoveFunction() {
         tree->getTreeToList(IN, &result);
         assert(result == in_order_list);
     }
+    delete tree;
     return SUCCESS;
 }
 
-Test_result TestAVLTree::test3() {
+Test_result TestAVLTree::testMemoryLeaks() {
     AVLTree<int,int> tree;
-    for(int i=7;i>0;i--){
+    for(int i=1; i<3; i++){
         tree.insert(i,i);
     }
-    list<int> ordered_list;
-    int n = 4;
-    tree.getNLargestNodes(&ordered_list, n);
-    for(auto n : ordered_list){
-        cout<<n<<" ,";
+    for(int i=1; i<=tree.getSize(); i++){
+        tree.remove(i);
     }
     return SUCCESS;
 }
@@ -139,7 +139,6 @@ Test_result TestAVLTree::testFindFunction() {
     }
     delete tree;
     return result;
-
 }
 
 AVLTree<int, int> *TestAVLTree::createRandomTree(int num_of_numbers, int random_range, list<int>* in_order_list) {
@@ -173,6 +172,25 @@ AVLTree<int, int> *TestAVLTree::createRandomTree(int num_of_numbers, int random_
         tester.pop_back();
     }
     return tree;
+}
+
+Test_result TestAVLTree::testEdgeCases() {
+    AVLTree<int,int> tree;
+    for(int i=1; i<10; i++){
+        tree.insert(i,i);
+    }
+    for(int i=1; i<10; i++){
+        assert(tree.insert(i,i) == AVL_KEY_ALREADY_EXISTS);
+    }
+    tree.clear();
+    for(int i=1; i<10; i++){
+        tree.insert(i,i);
+    }
+    for(int i=10; i<20; i++){
+        assert(tree.remove(i) == AVL_KEY_NOT_EXISTS);
+    }
+    return SUCCESS;
+
 }
 
 
