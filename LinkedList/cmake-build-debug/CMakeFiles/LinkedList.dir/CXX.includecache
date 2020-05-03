@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/list.h
+listNode.h
+/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/listNode.h
+ostream
+-
+
 /Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/listNode.h
 ostream
 -
@@ -13,14 +19,16 @@ ostream
 /Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/main.cpp
 iostream
 -
-tets_LinkedList.h
-/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/tets_LinkedList.h
+test_LinkedList.h
+/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/test_LinkedList.h
 
-/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/tets_LinkedList.h
+/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/test_LinkedList.h
 iostream
 -
 listNode.h
 /Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/listNode.h
-vector
+list.h
+/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/list.h
+cassert
 -
 

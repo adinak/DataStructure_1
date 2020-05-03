@@ -89,7 +89,7 @@
 		<Unit filename="/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/main.cpp">
 			<Option target="LinkedList"/>
 		</Unit>
-		<Unit filename="/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/tets_LinkedList.h">
+		<Unit filename="/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/test_LinkedList.h">
 			<Option target="LinkedList"/>
 		</Unit>
 		<Unit filename="/Users/adinakatz/Documents/Technion/Aviv Shitrit - Data_structures/HW/Wet1/LinkedList/CMakeLists.txt">
