@@ -372,43 +372,64 @@ D* AVLTree<K, D>::find(const K &key) {
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
-    K tmp_key = b->getKey();
-    D tmp_data = b->getData();
-    b->key = a->getKey();
-    b->data = a->getData();
-    a->key = tmp_key;
-    a->data = tmp_data;
-    //TODO: delete before submition
+    TreeNode<K,D>* a_father = a->getFather();
+    TreeNode<K,D>* b_father = b->getFather();
 
-    //    if(a->getHeight()>b->getHeight()){
-//        TreeNode<K,D>* tmp = b;
-//        b=a;
-//        a=tmp;
-//    }
-//    //tmp = b
-//    TreeNode<K,D>* b_father = b->getFather();
-//    TreeNode<K,D>* b_left = b->getLeft();
-//    TreeNode<K,D>* b_right = b->getRight();
-//    K b_key = b->getKey();
-//    if(this->biggest_node->getKey() == b_key){
-//        this->biggest_node = a;
-//    }
-//    if(this->biggest_node->getKey() == a->getKey()){
-//        this->biggest_node = b;
-//    }
-//    //b = a
-//    b->setLeft(a->getLeft());
-//    b->setRight(a->getRight());
-//    a->getFather()->setSon(b);
-//    //a = tmp
-//    a->setLeft(b_left);
-//    a->setRight(b_right);
-//    if(b_father != nullptr) {
-//        b_father->setSon(a);
-//    }
-//    else{
-//        this->root = a;
-//    }
+    if (b_father == a) {   // In case tn is parent of tn_new
+        if (a->getLeft()->key == b->key) { // Will never reach here, tn_new is on the right of tn
+            b->setLeft(a);
+            a->setLeft(nullptr);
+            b->setRight(a->getRight());
+            a->setRight(nullptr);
+        } else { // Right son
+            b->setLeft(a->getLeft());
+            a->setLeft(nullptr);
+            //tn might have right son, we know he doesn't have left sons
+            //TreeNode<K,D>* tn_new_right = tn_new->getRight();
+            TreeNode<K,D>* tn_new_right = b->getRight();
+            b->setRight(a);
+            a->setRight(tn_new_right);
+        }
+
+        // Deal with daddies - we know tn_daddy == tn_new_daddy
+        // tn_daddy
+        if (a == this->root) { // and therefor tn == tn_daddy
+            this->root = b;
+            b->father = nullptr;
+        } else {
+            if (a_father->getLeft() != nullptr && a_father->getLeft()->key == a->key) {  // Left son
+                a_father->setLeft(b);
+            } else {    // Right son
+                a_father->setRight(b);
+            }
+        }
+    } else { // At least 1 node between tn, tn_new, treating daddies is required
+        b->setLeft(a->getLeft()); // What tn.left == tn_new_dad ?
+        a->setLeft(nullptr);
+        //tn_new might have right son
+        TreeNode<K,D>* tn_new_right = b->getRight();
+        b->setRight(a->getRight());
+        a->setRight(tn_new_right);
+
+        // Deal with daddies - we know tn_daddy != tn_new_daddy
+        // tn_daddy
+        if (a == this->root) {
+            this->root = b;
+            b->father = nullptr;
+        } else {
+            if (a_father->getLeft() != nullptr && a_father->getLeft()->key == a->key) {   // Left son
+                a_father->setLeft(b);
+            } else { // Right son
+                a_father->setRight(b);
+            }
+        }
+        // tn_new_daddy - we know tn_new_daddy != tn_daddy
+        if (b_father->getLeft() != nullptr && b_father->getLeft()->key == b->key) {  // Left son
+            b_father->setLeft(a);
+        } else {    // Right son
+            b_father->setRight(a);
+        }
+    }
     return AVL_SUCCESS;
 }
 

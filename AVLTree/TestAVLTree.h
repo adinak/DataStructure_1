@@ -224,8 +224,13 @@ Test_result TestAVLTree::testDoSomething() {
         tree.insert(i,tmp_tree);
     }
     doSomething func;
-    int a=5;
+    int a=2;
     tree.doSomethingToNLargestNodes(func, a);
+    list<AVLTree<int,int>*> lst;
+    tree.getTreeToList(IN,&lst);
+    for(auto tree:lst){
+        delete tree;
+    }
     return SUCCESS;
 }
 
