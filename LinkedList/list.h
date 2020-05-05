@@ -160,13 +160,17 @@ ListResult List<T>::popNode(ListNode<T>* node) {
     if(this->isEmpty()) {
         return LIST_IS_EMPTY;
     }
-
+    if(node == this->getHead()) {
+        this->popFirst();
+        return LIST_SUCCESS;
+    } else if(node == this->getTail()) {
+        this->popLast();
+        return LIST_SUCCESS;
+    }
     if(this->findNode(node) == ELEMENT_EXISTS) {
         node->removeNode();
-
         delete node;
         this->decreaseLength();
-
         return LIST_SUCCESS;
     }
 
@@ -206,8 +210,10 @@ void List<T>::deleteSubList(ListNode<T>* node) {
         delete node;
         node = nextNode;
         nextNode = node->getNext();
+        this->decreaseLength();
     }
     delete node;
+    this->decreaseLength();
 }
 
 /** PRINT **/
@@ -219,8 +225,5 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
     }
     return os;
 }
-
-
-
 
 #endif //LINKEDLIST_LIST_H

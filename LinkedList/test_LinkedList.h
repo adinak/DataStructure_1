@@ -125,6 +125,8 @@ void TestListNode::test3() {
     cout << my_list << endl;
     cout << "Head data: " << my_list.getHeadData() << endl;
     cout << "Tail data: " << my_list.getTailData() << endl;
+    my_list.deleteSubList(my_list.getTail());
+    cout << "list length: " << my_list.getLength() << endl;
 }
 
 void TestListNode::test() {
