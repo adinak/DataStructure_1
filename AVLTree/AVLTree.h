@@ -285,11 +285,6 @@ AVLTreeResult AVLTree<K, D>::getPostOrder(TreeNode<K, D> *root_node, list<D> *or
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::getReverseOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n) {
-    //TODO: delete before submition
-    if(n < 0) {
-        std::cout<<"getReverse, num of node < 0";
-        exit(1);
-    }
     if(root_node == nullptr || n == 0) return AVL_SUCCESS;
     getReverseOrder(root_node->getRight(), ordered_list, n);
     if(n == 0) return AVL_SUCCESS;
@@ -372,6 +367,11 @@ D* AVLTree<K, D>::find(const K &key) {
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::swapNodes(TreeNode<K, D>* a, TreeNode<K, D>* b) {
+    if(b->getHeight()>a->getHeight()){
+        TreeNode<K,D>* tmp = a;
+        a=b;
+        b=tmp;
+    }
     TreeNode<K,D>* a_father = a->getFather();
     TreeNode<K,D>* b_father = b->getFather();
 
@@ -498,7 +498,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNodeWithTwoChildren(TreeNode<K, D> *node_t
         curr = curr->getLeft();
     }
     swapNodes(curr, node_to_delete);
-    return deleteNode(curr);
+    return deleteNode(node_to_delete);
 }
 
 template<class K, class D>

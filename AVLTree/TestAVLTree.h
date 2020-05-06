@@ -35,6 +35,7 @@ private:
     Test_result testMemoryLeaks();
     Test_result testEdgeCases();
     Test_result testDoSomething();
+    Test_result testRemoveRandom();
 public:
     TestAVLTree(){
         srand (time(nullptr));
@@ -57,6 +58,7 @@ Test_result TestAVLTree::test() {
     cout<<"testEdgeCases - SUCCESS"<<endl;
     assert(testDoSomething() == SUCCESS);
     cout<<"testDoSomething - SUCCESS"<<endl;
+    assert(testRemoveRandom()==SUCCESS);
     return SUCCESS;
 }
 
@@ -82,6 +84,7 @@ Test_result TestAVLTree::testInsertFunction() {
         tree.insert(tester.back(), tester.back());
         tester.pop_back();
         i++;
+        assert(tree.checkSum(tree.root));
     }
     tester.clear();
     tree.getTreeToList(IN, &tester);
@@ -182,18 +185,21 @@ Test_result TestAVLTree::testEdgeCases() {
     for(int i=1; i<10; i++){
         tree.insert(i,i);
     }
+    assert(tree.checkSum(tree.root));
     for(int i=1; i<10; i++){
         assert(tree.insert(i,i) == AVL_KEY_ALREADY_EXISTS);
+        assert(tree.checkSum(tree.root));
     }
     tree.clear();
     for(int i=1; i<10; i++){
         tree.insert(i,i);
+        assert(tree.checkSum(tree.root));
     }
     for(int i=10; i<20; i++){
         assert(tree.remove(i) == AVL_KEY_NOT_EXISTS);
+        assert(tree.checkSum(tree.root));
     }
     list<int> lst;
-
     AVLTree<int,int>* tree2 = createRandomTree(100,10000, &lst);
     list<int> result;
     int a = 5;
@@ -203,6 +209,7 @@ Test_result TestAVLTree::testEdgeCases() {
         lst.pop_back();
         result.pop_front();
     }
+    assert(tree.checkSum(tree.root));
     delete tree2;
     return SUCCESS;
 }
@@ -231,6 +238,48 @@ Test_result TestAVLTree::testDoSomething() {
     for(auto tree:lst){
         delete tree;
     }
+    return SUCCESS;
+}
+
+Test_result TestAVLTree::testRemoveRandom() {
+    AVLTree<int,int> tree;
+    for(int i=1; i<10; i++){
+        tree.insert(i,i);
+    }
+    tree.remove(4);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(9);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(2);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(7);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(1);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(8);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(6);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(3);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    tree.remove(5);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+    int a=7;
+    tree.insert(a,a);
+    a=3;
+    tree.insert(a,a);
+    tree.printAVLTree(IN);
+    assert(tree.checkSum(tree.root));
+
     return SUCCESS;
 }
 
