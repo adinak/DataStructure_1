@@ -19,6 +19,7 @@ private:
     int length;
     ListNode<T>* head;
     ListNode<T>* tail;
+    ListNode<T>* current;
 
     void increaseLength();
     void decreaseLength();
@@ -32,14 +33,18 @@ public:
     List();
     ~List() = default;
 
-    bool isEmpty();
+    bool isEmpty() const;
 
     T getHeadData() const;
     T getTailData() const;
-    T getNodeData(ListNode<T>* node) const; //TODO: do i need this?
+    T getCurrentData() const;
     int getLength() const;
     ListNode<T>* getHead() const;
     ListNode<T>* getTail() const;
+    ListNode<T>* getCurrent() const;
+
+    T getNextData();
+    void restartCurrent();
 
     void pushFirst(T data);
     void pushLast(T data);
@@ -47,7 +52,7 @@ public:
     ListResult popNode(ListNode<T>* node);
     T popFirst();
     T popLast();
-    void deleteSubList(ListNode<T>* node);
+    void clearList();
 
     template<typename R>
     friend std::ostream& operator<<(std::ostream& os, const List<R>& list);
@@ -84,9 +89,8 @@ ListResult List<T>::findNode(ListNode<T>* node) {
     if(this->isEmpty()) {
         return LIST_IS_EMPTY;
     }
-
-    for( auto current = this->getHead(); current->getNext() != nullptr;
-        current = current->getNext()) {
+    for( auto myCurrent = this->getHead(); myCurrent->getNext() != nullptr;
+        myCurrent = myCurrent->getNext()) {
         if(current == node) {
             return ELEMENT_EXISTS;
         }
@@ -96,7 +100,7 @@ ListResult List<T>::findNode(ListNode<T>* node) {
 
 /**================================ PUBLIC ================================**/
 template<typename T>
-bool List<T>::isEmpty() {
+bool List<T>::isEmpty() const {
     return this->getLength() == EMPTY;
 }
 
@@ -126,17 +130,45 @@ void List<T>::pushLast(T data) {
 /** GET **/
 template<typename T>
 T List<T>::getHeadData() const {
+    if(this->isEmpty()) {
+        T dummy = T();
+        return dummy;
+    }
     return this->head->getData();
 }
 
 template<typename T>
 T List<T>::getTailData() const {
+    if(this->isEmpty()) {
+        T dummy = T();
+        return dummy;
+    }
     return this->tail->getData();
 }
 
 template<typename T>
-T List<T>::getNodeData(ListNode<T> *node) const {
-    return node->getData();
+T List<T>::getCurrentData() const {
+    if(this->current == nullptr) {
+        T dummy = T();
+        return dummy;
+    }
+    return this->current->getData();
+}
+
+template<typename T>
+T List<T>::getNextData() {
+    if(this->current == nullptr) {
+        this->restartCurrent();
+    }
+    T data = this->current->getData();
+    ListNode<T>* next = this->current->getNext();
+    this->current = next;
+    return data;
+}
+
+template<typename T>
+void List<T>::restartCurrent() {
+    this->current = this->getHead();
 }
 
 template<typename T>
@@ -152,6 +184,11 @@ ListNode<T> *List<T>::getHead() const {
 template<typename T>
 ListNode<T> *List<T>::getTail() const {
     return this->tail;
+}
+
+template<typename T>
+ListNode<T> *List<T>::getCurrent() const {
+    return this->current;
 }
 
 /** POP **/
@@ -201,18 +238,19 @@ T List<T>::popLast() {
 
 /** C'TOR**/
 template<typename T>
-List<T>::List() : length(0), head(nullptr), tail(nullptr) { }
+List<T>::List() : length(0), head(nullptr), tail(nullptr), current(nullptr) {}
 
 template<typename T>
-void List<T>::deleteSubList(ListNode<T>* node) {
-    ListNode<T>* nextNode = node->getNext();
+void List<T>::clearList() {
+    this->current = this->getHead();
+    ListNode<T>* nextNode = this->current->getNext();
     while(nextNode != nullptr) {
-        delete node;
-        node = nextNode;
-        nextNode = node->getNext();
+        delete this->current;
+        this->current = nextNode;
+        nextNode = nextNode->getNext();
         this->decreaseLength();
     }
-    delete node;
+    delete this->current;
     this->decreaseLength();
 }
 
@@ -225,5 +263,7 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
     }
     return os;
 }
+
+
 
 #endif //LINKEDLIST_LIST_H
