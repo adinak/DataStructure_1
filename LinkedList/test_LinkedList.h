@@ -52,63 +52,31 @@ void TestListNode::test1() {
 
 }
 
-/*void TestListNode::test2() {
-    //create list
+void TestListNode::test2() {
     List<int> my_list;
-    cout << "# Created empty list successfully #" << endl;
+    cout << "# CREATED EMPTY LIST #" << endl;
 
-    //create nodes
-    ListNode<int> node_1(1);
-    ListNode<int> node_2(2);
+    for (int i = 100; i > 0; --i) {
+        my_list.pushFirst(i);
+    }
 
-    //test pushFirst
-    my_list.pushFirst(&node_2);
-    my_list.pushFirst(&node_1);
-    cout << "# Pushed two nodes into the list successfully #" << endl;
+    cout << my_list << endl;
+    my_list.restartCurrent();
+    bool flag = true;
+    while(my_list.getCurrent() != nullptr) {
+        cout << "current is: " << my_list.getNextData() << endl;
+        if(my_list.getCurrentData() == 10 && flag) {
+            my_list.restartCurrent();
+            flag = false;
+        }
+    }
+    cout << "current is: " << my_list.getNextData() << endl;
 
-    // test insert worked correctly
+    my_list.clearList();
+    cout << "list length: " << my_list.getLength() << endl;
     cout << "head: " << my_list.getHeadData() << endl;
-    cout << "tail: " << my_list.getTailData() << endl;
-
-    // test << operator
-    //cout << my_list;
-
-    // create third node
-    ListNode<int> node_3(3);
-
-    // test pushLast
-    my_list.pushLast(&node_3);
-    cout << "# Pushed to end of list successfully #" << endl;
-
-    // test all nodes are in list correctly
-    cout << my_list.getHeadData() << endl;
-    cout << my_list.head->next->getData() << endl;
-    cout << my_list.getTailData() << endl;
-
-    // test getLength() and popping a specific node
-    cout << "list length: " << my_list.getLength() << endl;
-    assert(my_list.popNode(&node_1) == LIST_SUCCESS);
-    cout << "# Popped a specific node from the list successfully #" << endl;
-    cout << "list length: " << my_list.getLength() << endl;
-
-    // test all nodes are in list correctly
-    cout << my_list.getHeadData() << endl;
-    cout << my_list.head->next->getData() << endl;
-    cout << my_list.getTailData() << endl;
-
-    // test popping a node that doesn't exist in the list
-    ListNode<int> node_10(10);
-    assert(my_list.popNode(&node_10) == ELEMENT_DOES_NOT_EXIST);
-
-    assert(my_list.popNode(&node_2) == LIST_SUCCESS);
-    //cout << my_list;
-    cout << "list length: " << my_list.getLength() << endl;
-    assert(my_list.popNode(&node_3) == LIST_SUCCESS);
-    //cout << my_list;
-    cout << "list length: " << my_list.getLength() << endl;
-    assert(my_list.popNode(&node_3) == LIST_IS_EMPTY);
 }
-*/
+
 
 void TestListNode::test3() {
     List<int> my_list;
@@ -125,12 +93,12 @@ void TestListNode::test3() {
     cout << my_list << endl;
     cout << "Head data: " << my_list.getHeadData() << endl;
     cout << "Tail data: " << my_list.getTailData() << endl;
-    my_list.deleteSubList(my_list.getTail());
+    my_list.clearList();
     cout << "list length: " << my_list.getLength() << endl;
 }
 
 void TestListNode::test() {
-    //test1();
+    test2();
     test3();
 }
 
