@@ -242,16 +242,9 @@ List<T>::List() : length(0), head(nullptr), tail(nullptr), current(nullptr) {}
 
 template<typename T>
 void List<T>::clearList() {
-    this->current = this->getHead();
-    ListNode<T>* nextNode = this->current->getNext();
-    while(nextNode != nullptr) {
-        delete this->current;
-        this->current = nextNode;
-        nextNode = nextNode->getNext();
-        this->decreaseLength();
+    while (this->head != nullptr) {
+        this->popFirst();
     }
-    delete this->current;
-    this->decreaseLength();
 }
 
 /** PRINT **/
