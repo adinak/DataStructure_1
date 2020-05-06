@@ -31,7 +31,7 @@ private:
 
 public:
     List();
-    ~List() = default;
+    ~List();
 
     bool isEmpty() const;
 
@@ -240,10 +240,18 @@ T List<T>::popLast() {
 template<typename T>
 List<T>::List() : length(0), head(nullptr), tail(nullptr), current(nullptr) {}
 
+/** D'TOR **/
 template<typename T>
 void List<T>::clearList() {
     while (this->head != nullptr) {
         this->popFirst();
+    }
+}
+
+template<typename T>
+List<T>::~List() {
+    if(this->length != EMPTY) {
+        this->clearList();
     }
 }
 
