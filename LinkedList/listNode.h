@@ -19,20 +19,17 @@ private:
     void setData(T newData);
 
 public:
+    ListNode() = default;
     explicit ListNode(T data);
     ~ListNode() = default;
 
     ListNode* getNext() const;
     ListNode* getPrev() const;
     T getData() const;
+    void attachNode(ListNode* prev ,ListNode* next);
+    void removeNode();
 
-    //TODO: do i need this?
-    /*template<typename R>
-    friend class List;*/
-
-    friend std::ostream& operator<<(std::ostream& os, const ListNode<T>&);
-
-    friend class TestListNode; //debug
+    friend class TestListNode; //TODO: debug
 };
 
 /**===========================================================================
@@ -55,6 +52,31 @@ void ListNode<T>::setData(T newData) {
     this->data = newData;
 }
 
+template<typename T>
+void ListNode<T>::attachNode(ListNode *newPrev, ListNode *newNext) {
+    this->setNext(newNext);
+    this->setPrev(newPrev);
+
+    if(newPrev != nullptr) {
+        newPrev->setNext(this);
+    }
+    if(newNext != nullptr) {
+        newNext->setPrev(this);
+    }
+}
+
+template<typename T>
+void ListNode<T>::removeNode() {
+    ListNode<T>* myNext = this->getNext();
+    ListNode<T>* myPrev = this->getPrev();
+    if(myNext != nullptr) {
+        myNext->setPrev(myPrev);
+    }
+    if(myPrev != nullptr) {
+        myPrev->setNext(myNext);
+    }
+}
+
 /** GET **/
 template<typename T>
 ListNode<T>* ListNode<T>::getNext() const {
@@ -71,16 +93,10 @@ T ListNode<T>::getData() const {
     return this->data;
 }
 
-/** C'TOR **/
+/** C'TOR && D'TOR **/
 template<typename T>
 ListNode<T>::ListNode(T data) : data(data), next(nullptr), prev(nullptr){}
 
-/** Print **/
-//TODO: currently not working
-template<typename T>
-std::ostream &operator<<(std::ostream &os, const ListNode<T> &node) {
-    os << node.data;
-    return os;
-}
+
 
 #endif //LINKEDLIST_LISTNODE_H
