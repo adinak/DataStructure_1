@@ -36,6 +36,7 @@ private:
     Test_result testEdgeCases();
     Test_result testDoSomething();
     Test_result testRemoveRandom();
+    Test_result testOrders();
 public:
     TestAVLTree(){
         srand (time(nullptr));
@@ -56,9 +57,11 @@ Test_result TestAVLTree::test() {
     testMemoryLeaks();
     assert(testEdgeCases()==SUCCESS);
     cout<<"testEdgeCases - SUCCESS"<<endl;
-    assert(testDoSomething() == SUCCESS);
+    //assert(testRemoveRandom()==SUCCESS);
+    assert(testDoSomething()==SUCCESS);
     cout<<"testDoSomething - SUCCESS"<<endl;
-    assert(testRemoveRandom()==SUCCESS);
+    assert(testOrders() == SUCCESS);
+    cout<<"testOrders - SUCCESS"<<endl;
     return SUCCESS;
 }
 
@@ -199,18 +202,7 @@ Test_result TestAVLTree::testEdgeCases() {
         assert(tree.remove(i) == AVL_KEY_NOT_EXISTS);
         assert(tree.checkSum(tree.root));
     }
-    list<int> lst;
-    AVLTree<int,int>* tree2 = createRandomTree(100,10000, &lst);
-    list<int> result;
-    int a = 5;
-    tree2->getNLargestNodes(&result, a);
-    while(!result.empty()){
-        assert(lst.back() == result.front());
-        lst.pop_back();
-        result.pop_front();
-    }
     assert(tree.checkSum(tree.root));
-    delete tree2;
     return SUCCESS;
 }
 
@@ -220,19 +212,19 @@ Test_result TestAVLTree::testDoSomething() {
         doSomething() = default;
         ~doSomething() = default;
         void operator()(AVLTree<int,int>* inside_tree, int &n){
-            list<int> biggest_list;
-            inside_tree->getNLargestNodes(&biggest_list,n);
-            print(biggest_list);
+            list<int> lst;
+            inside_tree->getTreeToList(IN, &lst, n);
+            print(lst);
         }
     };
     AVLTree<int,AVLTree<int,int>*> tree;
     for(int i =0;i<4;i++){
-        AVLTree<int,int>* tmp_tree = createRandomTree(3,10);
+        AVLTree<int,int>* tmp_tree = createRandomTree(100,1000);
         tree.insert(i,tmp_tree);
     }
     doSomething func;
-    int a=2;
-    tree.doSomethingToNLargestNodes(func, a);
+    int a=5;
+    tree.doSomethingInOrder(func, a);
     list<AVLTree<int,int>*> lst;
     tree.getTreeToList(IN,&lst);
     for(auto tree:lst){
@@ -279,7 +271,27 @@ Test_result TestAVLTree::testRemoveRandom() {
     tree.insert(a,a);
     tree.printAVLTree(IN);
     assert(tree.checkSum(tree.root));
+    return SUCCESS;
+}
 
+Test_result TestAVLTree::testOrders() {
+    AVLTree<int,int> tree;
+    list<int> lst;
+    for(int i=1;i<10;i++){
+        tree.insert(i,i);
+    }
+    int n=5;
+    tree.getTreeToList(IN, &lst, n);
+    print(lst);
+    lst.clear();
+    n=5;
+    tree.getTreeToList(PRE, &lst, n);
+    print(lst);
+    lst.clear();
+    n=5;
+    tree.getTreeToList(POST, &lst, n);
+    print(lst);
+    lst.clear();
     return SUCCESS;
 }
 

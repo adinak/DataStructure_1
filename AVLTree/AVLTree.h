@@ -32,9 +32,11 @@ private:
     AVLTreeResult balanceNode(TreeNode<K,D>* curr);
 //TODO: replace with Adina's List
     AVLTreeResult getPreOrder(TreeNode<K,D>* root_node, std::list<D>* ordered_list);
+    AVLTreeResult getPreOrder(TreeNode<K,D>* root_node, std::list<D>* ordered_list, int& n);
     AVLTreeResult getInOrder(TreeNode<K, D> *root_node, list<D> *ordered_list);
+    AVLTreeResult getInOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int& n);
     AVLTreeResult getPostOrder(TreeNode<K, D> *root_node, list<D> *ordered_list);
-    AVLTreeResult getReverseOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n);
+    AVLTreeResult getPostOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int& n);
 
     AVLTreeResult swapNodes(TreeNode<K,D>* a, TreeNode<K,D>* b);
     TreeNode<K, D> * deleteNode(TreeNode<K, D> *node_to_delete);
@@ -44,7 +46,7 @@ private:
     AVLTreeResult clearTree(TreeNode<K, D> *root_node);
 
     template<typename Function>
-    AVLTreeResult doSomethingInReverseOrder(Function doSomething, int &n, TreeNode<K,D>* node);
+    AVLTreeResult iterateAndDoInOrder(TreeNode<K, D> *node, int &n, Function doSomething);
 
     bool checkSum(TreeNode<K, D> *node);
 
@@ -61,9 +63,10 @@ public:
     void printAVLTree(AVLTreeOrderType type);
     //TODO: replace with Adina's List
     AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> *ordered_list);
-    AVLTreeResult getNLargestNodes(list<D> *ordered_list, int &n);
+    AVLTreeResult getTreeToList(AVLTreeOrderType type, list<D> *ordered_list, int& n);
+
     template<typename Function>
-    AVLTreeResult doSomethingToNLargestNodes(Function doSomething, int &n);
+    AVLTreeResult doSomethingInOrder(Function doSomething, int &n);
 
     AVLTreeResult clear();
 
@@ -257,8 +260,6 @@ AVLTreeResult AVLTree<K,D>::insert(K& key, D& data){
     return AVL_SUCCESS;
 }
 
-
-
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::getPreOrder(TreeNode<K, D> *root_node, list<D> *ordered_list) {
     if(root_node == nullptr) return AVL_SUCCESS;
@@ -283,16 +284,38 @@ AVLTreeResult AVLTree<K, D>::getPostOrder(TreeNode<K, D> *root_node, list<D> *or
     ordered_list->push_back(root_node->getData());
 }
 
+
+//======================================================================================================
+
+
 template<class K, class D>
-AVLTreeResult AVLTree<K, D>::getReverseOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n) {
+AVLTreeResult AVLTree<K, D>::getPreOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n) {
     if(root_node == nullptr || n == 0) return AVL_SUCCESS;
-    getReverseOrder(root_node->getRight(), ordered_list, n);
+    ordered_list->push_back(root_node->getData());
+    n--;
+    getPreOrder(root_node->getLeft(), ordered_list, n);
+    getPreOrder(root_node->getRight(), ordered_list, n);
+}
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::getInOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n) {
+    if(root_node == nullptr || n == 0) return AVL_SUCCESS;
+    getInOrder(root_node->getLeft(), ordered_list, n);
     if(n == 0) return AVL_SUCCESS;
     ordered_list->push_back(root_node->getData());
     n--;
-    getReverseOrder(root_node->getLeft(), ordered_list, n);
+    getInOrder(root_node->getRight(), ordered_list, n);
 }
 
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::getPostOrder(TreeNode<K, D> *root_node, list<D> *ordered_list, int &n) {
+    if(root_node == nullptr || n == 0) return AVL_SUCCESS;
+    getPostOrder(root_node->getLeft(), ordered_list, n);
+    getPostOrder(root_node->getRight(), ordered_list, n);
+    if(n == 0) return AVL_SUCCESS;
+    ordered_list->push_back(root_node->getData());
+    n--;
+}
 
 
 template<class K, class D>
@@ -303,21 +326,6 @@ void AVLTree<K, D>::printAVLTree(AVLTreeOrderType type) {
         std::cout<<data<<", ";
     }
     std::cout<<std::endl;
-}
-
-template<class K, class D>
-AVLTreeResult AVLTree<K, D>::getNLargestNodes(list<D> *ordered_list, int &n) {
-    TreeNode<K,D>* curr = biggest_node;
-    if(curr == nullptr) return AVL_SUCCESS;
-    getReverseOrder(curr, ordered_list, n);
-    curr = curr->getFather();
-    while(curr!= nullptr && n > 0){
-        ordered_list->push_back(curr->getData());
-        n--;
-        getReverseOrder(curr->getLeft(), ordered_list, n);
-        curr = curr->getFather();
-    }
-    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -332,11 +340,26 @@ AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> *order
         case POST:
             getPostOrder(this->root, ordered_list);
             break;
-        case REVERSE:
-            getReverseOrder(this->root, ordered_list, num_of_nodes);
     }
     return AVL_SUCCESS;
 }
+
+template<class K, class D>
+AVLTreeResult AVLTree<K, D>::getTreeToList(AVLTreeOrderType type, list<D> *ordered_list, int &n) {
+    switch(type){
+        case PRE:
+            getPreOrder(this->root, ordered_list, n);
+            break;
+        case IN:
+            getInOrder(this->root, ordered_list, n);
+            break;
+        case POST:
+            getPostOrder(this->root, ordered_list, n);
+            break;
+    }
+    return AVL_SUCCESS;
+}
+
 
 template<class K, class D>
 TreeNode<K, D>* AVLTree<K, D>::findNode(const K &key) {
@@ -552,27 +575,18 @@ AVLTreeResult AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
 
 template<class K, class D>
 template<typename Function>
-AVLTreeResult AVLTree<K, D>::doSomethingToNLargestNodes(Function doSomething, int &n) {
-    TreeNode<K,D>* curr = biggest_node;
-    if(curr == nullptr) return AVL_SUCCESS;
-    doSomethingInReverseOrder(doSomething, n, curr);
-    curr = curr->getFather();
-    while(curr!= nullptr && n > 0){
-        doSomething(curr->getData(), n);
-        doSomethingInReverseOrder(doSomething, n, curr->getLeft());
-        curr = curr->getFather();
-    }
-    return AVL_SUCCESS;
+AVLTreeResult AVLTree<K, D>::iterateAndDoInOrder(TreeNode<K, D> *node, int &n, Function doSomething) {
+    if(node == nullptr || n == 0) return AVL_SUCCESS;
+    iterateAndDoInOrder(node->getLeft(), n, doSomething);
+    if(n == 0) return AVL_SUCCESS;
+    doSomething(node->getData(), n);
+    iterateAndDoInOrder(node->getRight(), n, doSomething);
 }
 
 template<class K, class D>
 template<typename Function>
-AVLTreeResult AVLTree<K, D>::doSomethingInReverseOrder(Function doSomething, int &n, TreeNode<K, D> *node) {
-    if(node == nullptr || n == 0) return AVL_SUCCESS;
-    doSomethingInReverseOrder(doSomething, n, node->getRight());
-    if(n == 0) return AVL_SUCCESS;
-    doSomething(node->getData(), n);
-    doSomethingInReverseOrder(doSomething, n, node->getLeft());
+AVLTreeResult AVLTree<K, D>::doSomethingInOrder(Function doSomething, int &n) {
+    return iterateAndDoInOrder(this->root, n, doSomething);
 }
 
 
