@@ -14,23 +14,36 @@
 
 typedef enum {AVL_SUCCESS, AVL_KEY_ALREADY_EXISTS, AVL_KEY_NOT_EXISTS,
                                         BALANCED, NOT_BALANCED} AVLTreeResult;
-typedef enum {PRE, IN, POST, REVERSE} AVLTreeOrderType;
+typedef enum {PRE, IN, POST} AVLTreeOrderType;
 
+/**
+ * Creating and operating AVL Tree, as learnt at the lectures.
+ * Storing, accessing at removing data at binary-search tree, while O(h)=log(n)
+ * when "h" stands for tree's depth and "n" stands for nodes stored at the tree.
+ * @tparam K Datatype of node KEY
+ * @tparam D Datatype of node DATA
+ */
 template<class K, class D>
 class AVLTree{
 private:
+    //Number of nodes in the tree
     int num_of_nodes;
     TreeNode<K,D>* root;
+    //Pointer to the node with the biggest Key
     TreeNode<K,D>* biggest_node;
 
+    //Rotating function for inserting or deleting nodes
     AVLTreeResult rotateLL(TreeNode<K,D>* B);
     AVLTreeResult rotateLR(TreeNode<K,D>* C);
     AVLTreeResult rotateRR(TreeNode<K,D>* B);
     AVLTreeResult rotateRL(TreeNode<K,D>* C);
 
+    //Add new_node to the tree
     AVLTreeResult addNewNode(TreeNode<K,D>* new_node);
+    //Balance single tree node
     AVLTreeResult balanceNode(TreeNode<K,D>* curr);
 
+    //Transferring the tree nodes data to lists according to specific order
     AVLTreeResult getPreOrder(TreeNode<K,D>* root_node, List<D> *ordered_list);
     AVLTreeResult getPreOrder(TreeNode<K,D>* root_node, List<D> *ordered_list, int& n);
     AVLTreeResult getInOrder(TreeNode<K, D> *root_node, List<D> *ordered_list);
@@ -38,39 +51,112 @@ private:
     AVLTreeResult getPostOrder(TreeNode<K, D> *root_node, List<D> *ordered_list);
     AVLTreeResult getPostOrder(TreeNode<K, D> *root_node, List<D> *ordered_list, int& n);
 
+    //Swap two nodes position, used for deleting nodes
     AVLTreeResult swapNodes(TreeNode<K,D>* a, TreeNode<K,D>* b);
+    //Deleting node from the tree
     TreeNode<K, D> * deleteNode(TreeNode<K, D> *node_to_delete);
+    //Deleting node with two children
     TreeNode<K, D> * deleteNodeWithTwoChildren(TreeNode<K,D>* node_to_delete);
+
+    //Find node in the tree with a specific key
     TreeNode<K,D>* findNode(const K& key);
 
-    AVLTreeResult clearTree(TreeNode<K, D> *root_node);
+    //Delete all the nodes from the tree
+    void clearTree(TreeNode<K, D> *root_node);
 
+    /*Iterate over the tree nodes in in-order and using doSomthing function on
+     *the nodes data
+     */
     template<typename Function>
     AVLTreeResult iterateAndDoInOrder(TreeNode<K, D> *node, Function doSomething, int &n);
 
-    bool checkSum(TreeNode<K, D> *node);
 
     //TODO:delete when done testing
     friend class TestAVLTree;
 
 public:
-    AVLTree():root(nullptr), biggest_node(nullptr), num_of_nodes(0) {};
+    // C'tors and D'tors
+    AVLTree();
     ~AVLTree();
+
+    //return the num of nodes in the tree
     int getSize();
+
+    //Add & Remove
+    /**
+     * Adds new item to the tree, while keeping it balanced
+     * @param key Identifier of new item
+     * @param data Data of new item
+     * @return AVL_SUCCESS / AVL_KEY_ALREADY_EXISTS
+     */
     AVLTreeResult insert(K& key, D& data);
+
+    /**
+     * Removes an item from the tree, while keeping it balanced
+     * @param key Identifier of removed item
+     * @return AVL_SUCCESS / AVL_KEY_NOT_EXISTS
+     */
     AVLTreeResult remove(const K& key);
+
+    /**
+     * Searches after a specific item, identifies by key, and returns a pointer
+     * to its data
+     * @param key Identifier for desired item
+     * @return pointer to the data associated with the specific key / nullptr if
+     * the specific key do not exists
+     */
     D* find(const K& key);
+
+    /**
+     * Prints (to std::cout) the content of the tree, by using selected search
+     * method
+     * @param type Search method (PRE, IN, POST)
+     */
     void printAVLTree(AVLTreeOrderType type);
-    //TODO: replace with Adina's List
+
+    // Data Accessing
+    /**
+     * Puts data stored at the tree to a given List<D>, using given search order
+     * @param Order type for the search (PRE, IN, POST)
+     * @param data_list List<D> to store search results at
+     * @param optional param that indicate the number of nodes to store in the list
+     */
     AVLTreeResult getTreeToList(AVLTreeOrderType type, List<D> *ordered_list);
     AVLTreeResult getTreeToList(AVLTreeOrderType type, List<D> *ordered_list, int& n);
 
+    /**
+     * Iterate over n of the tree nodes in in-order and use doSomething function
+     * on each nodes data.
+     * to use the function the user need to create a class with () operator
+     * overloaded with spesific params
+     * @param doSomething(D data, int &n)
+     *        @param data is the nodes data to operate on
+     *        @param uses to count the number of action (the user can increase
+     *               decrease n in order to count actions
+     * @param number of nodes/ actions to made
+     * @return AVL_SUCCESS
+     */
     template<typename Function>
     AVLTreeResult doSomethingInOrder(Function doSomething, int &n);
 
-    AVLTreeResult clear();
-
+    /**
+     * Delete all the nodes from the tree and set Private variable to nullptr
+     */
+    void clear();
 };
+
+/* ###################################################
+ *          Implementation - Public Functions
+ * ###################################################
+ */
+
+/* ----------------------------------
+ *         C'tors and D'tors
+ * ----------------------------------
+ */
+
+template<class K, class D>
+AVLTree<K, D>::AVLTree():root(nullptr), biggest_node(nullptr), num_of_nodes(0) {}
 
 template<class K, class D>
 AVLTree<K, D>::~AVLTree() {
@@ -80,7 +166,10 @@ AVLTree<K, D>::~AVLTree() {
     this->biggest_node = nullptr;
 }
 
-
+/* ----------------------------------
+ *         Add & Remove
+ * ----------------------------------
+ */
 template<class K, class D>
 int AVLTree<K, D>::getSize() {
     return this->num_of_nodes;
@@ -546,28 +635,20 @@ AVLTreeResult AVLTree<K, D>::remove(const K &key) {
 }
 
 template<class K, class D>
-bool AVLTree<K, D>::checkSum(TreeNode<K, D> *node) {
-    if(node == nullptr) return true;
-    if(node->getBf()>1 || node->getBf()<-1) return false;
-    return (checkSum(node->getRight())&&checkSum(node->getLeft()));
-}
-
-template<class K, class D>
-AVLTreeResult AVLTree<K, D>::clear() {
+void AVLTree<K, D>::clear() {
     clearTree(this->root);
     num_of_nodes = 0;
     this->root = nullptr;
     this->biggest_node = nullptr;
-    return AVL_SUCCESS;
+    return;
 }
 
 template<class K, class D>
-AVLTreeResult AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
-    if(root_node == nullptr) return AVL_SUCCESS;
+void AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
+    if(root_node == nullptr) return;
     clearTree(root_node->getLeft());
     clearTree(root_node->getRight());
     delete root_node;
-    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -585,6 +666,8 @@ template<typename Function>
 AVLTreeResult AVLTree<K, D>::doSomethingInOrder(Function doSomething, int &n) {
     return iterateAndDoInOrder(this->root, doSomething, n);
 }
+
+
 
 
 #endif //AVLTREE_AVLTREE_H
