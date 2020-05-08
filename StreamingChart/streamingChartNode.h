@@ -5,7 +5,7 @@
 #ifndef WET1_STREAMINGCHARTNODE_H
 #define WET1_STREAMINGCHARTNODE_H
 
-#include "AVLTree.h"
+#include "../AVLTree/AVLTree.h"
 
 typedef struct StreamingChartNode{
     int numberOfStreams;

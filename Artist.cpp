@@ -5,9 +5,10 @@
 #include "Artist.h"
 #include <iostream>
 
+
 Artist::Artist(int artist_ID, int num_of_songs): artist_id(artist_ID),
                                                 num_of_songs(num_of_songs) {
-    this->songs = new Song*[num_of_songs];
+    this->songs = new Song* [num_of_songs];
 }
 
 Artist::~Artist() {

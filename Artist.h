@@ -5,6 +5,7 @@
 #ifndef AVLTREE_ARTIST_H
 #define AVLTREE_ARTIST_H
 
+#include "StreamingChart/Song.h"
 
 class Artist {
 private:

@@ -3,12 +3,12 @@
 //
 
 #include "Song.h"
-#include "StreamingChart/streamingChart.h"
+#include "streamingChart.h"
 
-Song::Song(int artistID, int songID, streamingChartNode *chart_node) :
+Song::Song(int artistID, int songID, StreamingChartNode *chart_node) :
         artist_id(artistID), song_id(songID), chart_node(chart_node) {}
 
-streamingChartNode *Song::getChartNode() {
+StreamingChartNode *Song::getChartNode() {
     return this->chart_node;
 }
 
@@ -20,6 +20,6 @@ int Song::getArtistID() {
     return this->artist_id;
 }
 
-void Song::setChartNode(streamingChartNode *new_chart_node) {
+void Song::setChartNode(StreamingChartNode *new_chart_node) {
     this->chart_node = new_chart_node;
 }

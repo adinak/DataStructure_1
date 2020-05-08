@@ -5,7 +5,7 @@
 #ifndef WET1_STREAMINGCHART_H
 #define WET1_STREAMINGCHART_H
 
-#include "list.h"
+#include "../LinkedList/list.h"
 
 template <typename T>
 class streamingChart {
