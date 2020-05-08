@@ -5,12 +5,24 @@
 #ifndef WET1_STREAMINGCHARTNODE_H
 #define WET1_STREAMINGCHARTNODE_H
 
-#include "../AVLTree/AVLTree.h"
+#include "AVLTree.h"
+#include "artistID.h"
 
-typedef struct StreamingChartNode{
+typedef enum {CHART_ZERO, NOT_CHART_ZERO} NodeType;
+
+class StreamingChartNode{
+private:
     int numberOfStreams;
+    NodeType type; //todo: do i need this?
+    AVLTree<int, ArtistID>* artistTree;
+public:
+    StreamingChartNode(int numOfStreams);
+    ~StreamingChartNode();
 
-} ChartNode;
+    int getNumberOfStreams();
+    NodeType getNodeType(); //todo: do i need this?
+
+};
 
 
 #endif //WET1_STREAMINGCHARTNODE_H
