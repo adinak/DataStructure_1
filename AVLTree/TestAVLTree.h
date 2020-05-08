@@ -51,6 +51,7 @@ Test_result TestAVLTree::test() {
     assert(testAdinasList() == SUCCESS);
     cout<<"testAdinasList - SUCCESS"<<endl;
     assert(testMemoryLeaks() == SUCCESS);
+    assert(testRemoveRandom() == SUCCESS);
     return SUCCESS;
 }
 

@@ -82,7 +82,7 @@ public:
     //return the num of nodes in the tree
     int getSize();
 
-    //Add & Remove
+    //Insert & Remove
     /**
      * Adds new item to the tree, while keeping it balanced
      * @param key Identifier of new item
@@ -167,37 +167,75 @@ AVLTree<K, D>::~AVLTree() {
 }
 
 /* ----------------------------------
- *         Add & Remove
+ *         Get Size
  * ----------------------------------
  */
+
 template<class K, class D>
 int AVLTree<K, D>::getSize() {
     return this->num_of_nodes;
 }
 
+/* ----------------------------------
+ *         Insert & Remove
+ * ----------------------------------
+ */
+
+template<class K, class D>
+AVLTreeResult AVLTree<K,D>::insert(K& key, D& data){
+    TreeNode<K,D>* new_node = new TreeNode<K,D>(key,data);
+    AVLTreeResult add_result = addNewNode(new_node);//Adds the node to the tree
+    if(add_result != AVL_SUCCESS){//Something went wrong
+        delete new_node;
+        return add_result;
+    }
+    this->num_of_nodes++;
+    AVLTreeResult balance_result = NOT_BALANCED;
+    TreeNode<K,D>* curr = new_node;
+    int son_key = curr->getKey();
+    //Checking the BF of each node in the route to the root, updating heights
+    for(curr = new_node->getFather(); curr != nullptr ;curr=curr->getFather()){
+        //checking in which direction we went up
+        if(son_key>curr->getKey()){
+            curr->hr = curr->getRight()->getHeight();
+        }
+        else if(son_key<curr->getKey()){
+            curr->hl = curr->getLeft()->getHeight();
+        }
+        //after one rotation the tree is balanced
+        if(balance_result == NOT_BALANCED) {
+            balance_result = balanceNode(curr);
+        }
+        son_key = curr->getKey();
+    }
+    return AVL_SUCCESS;
+}
+
+
+
 template<class K, class D>
 AVLTreeResult AVLTree<K,D>::rotateLL(TreeNode<K, D>* B) {
+    //B is the unbalanced node with BF>1
     TreeNode<K,D>* A = B->getLeft();
     TreeNode<K,D>* father = B->getFather();
 
     B->setLeft(A->getRight());
     A->setRight(B);
-    if(father == nullptr){
+    if(father == nullptr){//that means B is the root
         A->father = nullptr;
         this->root = A;
     }
-    else if(A->getKey()>father->getKey()){
-        father->setRight(A);
-    }
-    else if(A->getKey()<father->getKey()){
-        father->setLeft(A);
+    else {
+        father->setSon(A);
     }
     return AVL_SUCCESS;
 }
 
 template<class K, class D>
 AVLTreeResult AVLTree<K,D>::rotateLR(TreeNode<K, D>* C) {
+    //C is the unbalanced node with BF>1
     TreeNode<K,D>* B = C->getLeft();
+    //B has BF=1 therefore he has a right son
     TreeNode<K,D>* A = B->getRight();
     TreeNode<K,D>* father = C->getFather();
 
@@ -205,42 +243,39 @@ AVLTreeResult AVLTree<K,D>::rotateLR(TreeNode<K, D>* C) {
     A->setLeft(B);
     C->setLeft(A->getRight());
     A->setRight(C);
-    if(father == nullptr){
+    if(father == nullptr){//that means C is the root
         A->father = nullptr;
         this->root = A;
     }
-    else if(A->getKey()>father->getKey()){
-        father->setRight(A);
-    }
-    else if(A->getKey()<father->getKey()){
-        father->setLeft(A);
+    else {
+        father->setSon(A);
     }
     return AVL_SUCCESS;
 }
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::rotateRR(TreeNode<K, D> *B) {
+    //B is the unbalanced node with BF<-1
     TreeNode<K,D>* A = B->getRight();
     TreeNode<K,D>* father = B->getFather();
 
     B->setRight(A->getLeft());
     A->setLeft(B);
-    if(father == nullptr){
+    if(father == nullptr){//that means B is the root
         A->father = nullptr;
         this->root = A;
     }
-    else if(A->getKey()>father->getKey()){
-        father->setRight(A);
-    }
-    else if(A->getKey()<father->getKey()){
-        father->setLeft(A);
+    else {
+        father->setSon(A);
     }
     return AVL_SUCCESS;
 }
 
 template<class K, class D>
 AVLTreeResult AVLTree<K,D>::rotateRL(TreeNode<K, D>* C) {
+    //C is the unbalanced node with BF<-1
     TreeNode<K,D>* B = C->getRight();
+    //B has BF=1 therefore he has a right son
     TreeNode<K,D>* A = B->getLeft();
     TreeNode<K,D>* father = C->getFather();
 
@@ -248,15 +283,12 @@ AVLTreeResult AVLTree<K,D>::rotateRL(TreeNode<K, D>* C) {
     A->setRight(B);
     C->setRight(A->getLeft());
     A->setLeft(C);
-    if(father == nullptr){
+    if(father == nullptr){//that means C is the root
         A->father = nullptr;
         this->root = A;
     }
-    else if(A->getKey()>father->getKey()){
-        father->setRight(A);
-    }
-    else if(A->getKey()<father->getKey()){
-        father->setLeft(A);
+    else {
+        father->setSon(A);
     }
     return AVL_SUCCESS;
 }
@@ -321,33 +353,6 @@ AVLTreeResult AVLTree<K, D>::balanceNode(TreeNode<K, D> *curr) {
     return NOT_BALANCED;
 }
 
-template<class K, class D>
-AVLTreeResult AVLTree<K,D>::insert(K& key, D& data){
-    TreeNode<K,D>* new_node = new TreeNode<K,D>(key,data);
-    AVLTreeResult add_result = addNewNode(new_node);
-    if(add_result != AVL_SUCCESS){
-        delete new_node;
-        return add_result;
-    }
-    this->num_of_nodes++;
-    AVLTreeResult balance_result = NOT_BALANCED;
-    TreeNode<K,D>* curr = new_node;
-    int son_key = curr->getKey();
-
-    for(curr = new_node->getFather(); curr != nullptr ;curr=curr->getFather()){
-        if(son_key>curr->getKey()){
-            curr->hr = curr->getRight()->getHeight();
-        }
-        else if(son_key<curr->getKey()){
-            curr->hl = curr->getLeft()->getHeight();
-        }
-        if(balance_result == NOT_BALANCED) {
-            balance_result = balanceNode(curr);
-        }
-        son_key = curr->getKey();
-    }
-    return AVL_SUCCESS;
-}
 
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::getPreOrder(TreeNode<K, D> *root_node, List <D> *ordered_list) {
