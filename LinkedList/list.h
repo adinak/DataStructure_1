@@ -12,6 +12,7 @@
 
 typedef enum {LIST_SUCCESS, LIST_IS_EMPTY, ELEMENT_EXISTS,
               ELEMENT_DOES_NOT_EXIST} ListResult;
+typedef enum {LIST_FRONT, LIST_BACK} ListDirection;
 
 template<typename T>
 class List {
@@ -44,7 +45,8 @@ public:
     ListNode<T>* getCurrent() const;
 
     T getNextData();
-    void restartCurrent();
+    T getPrevData();
+    void restartCurrent(ListDirection direction);
 
     void pushFirst(T data);
     void pushLast(T data);
@@ -158,7 +160,7 @@ T List<T>::getCurrentData() const {
 template<typename T>
 T List<T>::getNextData() {
     if(this->current == nullptr) {
-        this->restartCurrent();
+        this->restartCurrent(LIST_FRONT);
     }
     T data = this->current->getData();
     ListNode<T>* next = this->current->getNext();
@@ -167,8 +169,23 @@ T List<T>::getNextData() {
 }
 
 template<typename T>
-void List<T>::restartCurrent() {
-    this->current = this->getHead();
+T List<T>::getPrevData() {
+    if(this->current == nullptr) {
+        this->restartCurrent(LIST_BACK);
+    }
+    T data = this->current->getData;
+    ListNode<T>* prev = this->current->getPrev();
+    this->current = prev;
+    return data;
+}
+
+template<typename T>
+void List<T>::restartCurrent(ListDirection direction) {
+    if(direction == LIST_FRONT) {
+        this->current = this->getHead();
+    } else if(direction == LIST_BACK){
+        this->current = this->getTail();
+    }
 }
 
 template<typename T>
@@ -264,7 +281,6 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
     }
     return os;
 }
-
 
 
 #endif //LINKEDLIST_LIST_H

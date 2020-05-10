@@ -11,7 +11,8 @@ class Artist {
 private:
     int artist_id;
     int num_of_songs;
-    Song** songs;
+    int* streams;
+    void** songs;
 public:
     Artist(int artist_ID, int num_of_songs);
     ~Artist();

@@ -10,7 +10,7 @@
 #include "AVLTree.h"
 
 typedef enum{CHART_SUCCESS, CHART_FAIL} StreamingChartResult;
-
+typedef enum{CHART_FRONT, CHART_BACK} ChartDirection;
 
 class streamingChart {
 private:
@@ -19,9 +19,9 @@ private:
     StreamingChartNode* tail;
     StreamingChartNode* current;
 
-    void setZero();
-    void setTail();
-    void resetCurrent();
+    void setZero(StreamingChartNode* newZero);
+    void setTail(StreamingChartNode* newChartTail);
+    void resetCurrent(ChartDirection direction);
 
 public:
     streamingChart();
@@ -30,18 +30,23 @@ public:
     StreamingChartNode* getZero() const;
     StreamingChartNode* getTail() const;
     StreamingChartNode* getNext();
+    StreamingChartNode* getPrev();
     int getCurrentNumberOfStreams() const;
-    AVLTree<int, ArtistID>* getZeroArtists() const;
-    AVLTree<int, ArtistID>* getTailArtists() const;
-    AVLTree<int, ArtistID>* getCurrentArtists() const;
+    void getBestSongs(int* artists, int* songs, int amountOfSongs);
 
-
+    StreamingChartResult initializeCurrentToNode(StreamingChartNode* chartNode);
     //todo:first check if node exists
     StreamingChartResult pushStreamsChart(int numOfStreams);
+    //call when first time adding an artist
+    void** pushNewArtist(int artistID, int numOfSongs);
+    StreamingChartResult pushChartNode(int numOfStreams);
     //todo: add song with number of streams
-    StreamingChartResult pushSong(int artistID, int songID);
+    StreamingChartNodeTree* pushSong(int artistID, int songID,
+                                        int numOfStreams);
 
-    StreamingChartResult popChartNode();
+    StreamingChartResult popSong(int artistID, int songID);
+    StreamingChartResult popSong(ListNode<Song>* songNode);
+    StreamingChartResult popChartNode(int numOfStreams);
 
 };
 

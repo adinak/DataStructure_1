@@ -6,22 +6,54 @@
 #define WET1_STREAMINGCHARTNODE_H
 
 #include "AVLTree.h"
-#include "artistID.h"
+#include "Song.h"
 
-typedef enum {CHART_ZERO, NOT_CHART_ZERO} NodeType;
+/**================= FATHER =====================**/
 
 class StreamingChartNode{
 private:
-    int numberOfStreams;
-    NodeType type; //todo: do i need this?
-    AVLTree<int, ArtistID>* artistTree;
+    const int numberOfStreams;
 public:
     StreamingChartNode(int numOfStreams);
-    ~StreamingChartNode();
+    virtual ~StreamingChartNode() = 0;
 
-    int getNumberOfStreams();
-    NodeType getNodeType(); //todo: do i need this?
+    virtual void pushSong(int artistID, int songID) = 0;
+    virtual void pushArtist(int artistID) = 0;
+    virtual void popSong(int artistID, int songID) = 0;
+    virtual void popArtist(int artistID) = 0;
+    int getNumberOfStreams() const;
+};
 
+/**================ ZERO NODE ==================**/
+
+class StreamingChartNodeZero : public StreamingChartNode {
+private:
+    AVLTree<int, List<Song*>> songChart;
+public:
+    StreamingChartNodeZero(int numOfStreams);
+    ~StreamingChartNodeZero();
+
+    void pushSong(int artistID, int songID);
+    void pushArtist(int artistID);
+
+    void popSong(int artistID, int songID); //todo: do we need this?
+    void popSong(int artistID, ListNode<Song*>* songNode);
+    void popArtist(int artistID);
+};
+/**================ TREE NODE ==================**/
+
+class StreamingChartNodeTree : public StreamingChartNode{
+private:
+    AVLTree<int, AVLTree<int, Song*>> songChart;
+public:
+    StreamingChartNodeTree(int numOfStreams);
+    ~StreamingChartNodeTree();
+
+    void pushSong(int artistID, int songID);
+    void pushArtist(int artistID);
+
+    void popSong(int artistID, int songID);
+    void popArtist(int artistID);
 };
 
 
