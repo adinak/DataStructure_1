@@ -17,7 +17,7 @@ public:
     Artist(int artist_ID, int num_of_songs);
     ~Artist();
     int getArtistID();
-    Song* getSong(int i);
+    void * getSong(int i);
 };
 
 

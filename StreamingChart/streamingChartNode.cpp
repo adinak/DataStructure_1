@@ -31,12 +31,12 @@ void StreamingChartNodeZero::pushSong(int artistID, int songID) {
         this->pushArtist(artistID);
         temp_list = this->songChart.find(artistID);
     }
-    auto* new_song = new Song(artistID, songID, this); //todo: problem
+    auto* new_song = new Song(artistID, songID);//TODO:aviv - auto* means Song**
     temp_list->pushLast(new_song);
 }
 
 void StreamingChartNodeZero::pushArtist(int artistID) {
-    auto* new_list = new List<Song*>();
+    auto* new_list = new List<Song*>();//TODO:aviv - auto* means Song**
     this->songChart.insert(artistID, *new_list);
 }
 
@@ -67,13 +67,13 @@ void StreamingChartNodeTree::pushSong(int artistID, int songID) {
                                     // pointer-- need to implement in tree
         temp_tree = this->songChart.find(artistID);
     }
-    auto* new_song = new Song(artistID, songID, this);
-    temp_tree->insert(new_song);
+    auto new_song = new Song(artistID, songID);
+    temp_tree->insert(songID,new_song);
 }
 
 void StreamingChartNodeTree::pushArtist(int artistID) {
     auto* new_tree = new AVLTree<int, Song*>();
-    this->songChart.insert(artistID, *new_tree);
+    this->songChart.insert(artistID, *new_tree);//TODO:aviv - Fixed insert call
 }
 
 /**      POP       **/

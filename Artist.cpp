@@ -8,7 +8,7 @@
 
 Artist::Artist(int artist_ID, int num_of_songs): artist_id(artist_ID),
                                                 num_of_songs(num_of_songs) {
-    this->songs = new Song* [num_of_songs];
+    this->songs = new void*[num_of_songs];
 }
 
 Artist::~Artist() {
@@ -19,7 +19,7 @@ int Artist::getArtistID() {
     return this->artist_id;
 }
 
-Song *Artist::getSong(int i) {
+void * Artist::getSong(int i) {
     if(i>=num_of_songs||i<0){
         std::cerr<<"invalid song index"<<std::endl;
         return nullptr;

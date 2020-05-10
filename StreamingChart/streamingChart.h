@@ -14,7 +14,7 @@ typedef enum{CHART_FRONT, CHART_BACK} ChartDirection;
 
 class streamingChart {
 private:
-    List<StreamingChartNode> streamingChartList;
+    List<StreamingChartNode> streamingChartList; //TODO:aviv - there is no such object, need to be StreamingChartNode*
     StreamingChartNode* zero;
     StreamingChartNode* tail;
     StreamingChartNode* current;

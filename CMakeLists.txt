@@ -20,8 +20,6 @@ add_executable(Wet1
                 ${CHART}/streamingChart.cpp
                 ${CHART}/streamingChartNode.h
                 ${CHART}/streamingChartNode.cpp
-                ${CHART}/artistID.h
-                ${CHART}/artistID.cpp
                 ${CHART}/Song.h
                 ${CHART}/Song.cpp
                 ${TREE}/AVLTree.h
