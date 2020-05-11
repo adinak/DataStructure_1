@@ -31,12 +31,14 @@ void StreamingChartNodeZero::pushSong(int artistID, int songID) {
         this->pushArtist(artistID);
         temp_list = this->songChart.find(artistID);
     }
-    auto* new_song = new Song(artistID, songID);//TODO:aviv - auto* means Song**
+    auto new_song = new Song(artistID, songID);
     temp_list->pushLast(new_song);
+    //todo: if we have memory leak - we might need to delete new_song because
+    // of deep copy
 }
 
 void StreamingChartNodeZero::pushArtist(int artistID) {
-    auto* new_list = new List<Song*>();//TODO:aviv - auto* means Song**
+    auto* new_list = new List<Song*>();
     this->songChart.insert(artistID, *new_list);
 }
 
@@ -63,8 +65,7 @@ StreamingChartNodeTree::~StreamingChartNodeTree() {
 void StreamingChartNodeTree::pushSong(int artistID, int songID) {
     AVLTree<int, Song*>* temp_tree = this->songChart.find(artistID);
     if(temp_tree == nullptr) {
-        this->pushArtist(artistID); //todo: would be more efficient to return
-                                    // pointer-- need to implement in tree
+        this->pushArtist(artistID);
         temp_tree = this->songChart.find(artistID);
     }
     auto new_song = new Song(artistID, songID);
@@ -73,7 +74,7 @@ void StreamingChartNodeTree::pushSong(int artistID, int songID) {
 
 void StreamingChartNodeTree::pushArtist(int artistID) {
     auto* new_tree = new AVLTree<int, Song*>();
-    this->songChart.insert(artistID, *new_tree);//TODO:aviv - Fixed insert call
+    this->songChart.insert(artistID, *new_tree);
 }
 
 /**      POP       **/

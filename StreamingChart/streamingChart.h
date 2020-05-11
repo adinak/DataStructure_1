@@ -9,15 +9,17 @@
 #include "streamingChartNode.h"
 #include "AVLTree.h"
 
-typedef enum{CHART_SUCCESS, CHART_FAIL} StreamingChartResult;
+typedef enum{CHART_SUCCESS, CHART_FAIL,
+             CHART_NOT_ENOUGH_SONGS} StreamingChartResult;
 typedef enum{CHART_FRONT, CHART_BACK} ChartDirection;
 
 class streamingChart {
 private:
-    List<StreamingChartNode> streamingChartList; //TODO:aviv - there is no such object, need to be StreamingChartNode*
+    List<StreamingChartNode*> streamingChartList;
     StreamingChartNode* zero;
     StreamingChartNode* tail;
     StreamingChartNode* current;
+    int totalNumberOfSongs;
 
     void setZero(StreamingChartNode* newZero);
     void setTail(StreamingChartNode* newChartTail);
@@ -32,7 +34,7 @@ public:
     StreamingChartNode* getNext();
     StreamingChartNode* getPrev();
     int getCurrentNumberOfStreams() const;
-    void getBestSongs(int* artists, int* songs, int amountOfSongs);
+    StreamingChartResult getBestSongs(int* artists, int* songs, int amountOfSongs);
 
     StreamingChartResult initializeCurrentToNode(StreamingChartNode* chartNode);
     //todo:first check if node exists

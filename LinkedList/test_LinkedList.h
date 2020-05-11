@@ -61,12 +61,12 @@ void TestListNode::test2() {
     }
 
     cout << my_list << endl;
-    my_list.restartCurrent();
+    my_list.restartCurrent(LIST_FRONT);
     bool flag = true;
     while(my_list.getCurrent() != nullptr) {
         cout << "current is: " << my_list.getNextData() << endl;
         if(my_list.getCurrentData() == 10 && flag) {
-            my_list.restartCurrent();
+            my_list.restartCurrent(LIST_FRONT);
             flag = false;
         }
     }

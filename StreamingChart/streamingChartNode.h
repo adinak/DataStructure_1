@@ -30,15 +30,15 @@ class StreamingChartNodeZero : public StreamingChartNode {
 private:
     AVLTree<int, List<Song*>> songChart;
 public:
-    StreamingChartNodeZero(int numOfStreams);
-    ~StreamingChartNodeZero();
+    explicit StreamingChartNodeZero(int numOfStreams);
+    ~StreamingChartNodeZero() override;
 
-    void pushSong(int artistID, int songID);
-    void pushArtist(int artistID);
+    void pushSong(int artistID, int songID) override ;
+    void pushArtist(int artistID) override;
 
     void popSong(int artistID, int songID); //todo: do we need this?
     void popSong(int artistID, ListNode<Song*>* songNode);
-    void popArtist(int artistID);
+    void popArtist(int artistID) override;
 };
 /**================ TREE NODE ==================**/
 
@@ -46,14 +46,14 @@ class StreamingChartNodeTree : public StreamingChartNode{
 private:
     AVLTree<int, AVLTree<int, Song*>> songChart;
 public:
-    StreamingChartNodeTree(int numOfStreams);
-    ~StreamingChartNodeTree();
+    explicit StreamingChartNodeTree(int numOfStreams);
+    ~StreamingChartNodeTree() override;
 
-    void pushSong(int artistID, int songID);
-    void pushArtist(int artistID);
+    void pushSong(int artistID, int songID) override;
+    void pushArtist(int artistID) override;
 
-    void popSong(int artistID, int songID);
-    void popArtist(int artistID);
+    void popSong(int artistID, int songID) override;
+    void popArtist(int artistID) override;
 };
 
 
