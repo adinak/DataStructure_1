@@ -12,7 +12,6 @@
 
 typedef enum {LIST_SUCCESS, LIST_IS_EMPTY, ELEMENT_EXISTS,
               ELEMENT_DOES_NOT_EXIST} ListResult;
-typedef enum {LIST_FRONT, LIST_BACK} ListDirection;
 
 template<typename T>
 class List {
@@ -20,7 +19,6 @@ private:
     int length;
     ListNode<T>* head;
     ListNode<T>* tail;
-    ListNode<T>* current;
 
     void increaseLength();
     void decreaseLength();
@@ -38,15 +36,9 @@ public:
 
     T getHeadData() const;
     T getTailData() const;
-    T getCurrentData() const;
     int getLength() const;
     ListNode<T>* getHead() const;
     ListNode<T>* getTail() const;
-    ListNode<T>* getCurrent() const;
-
-    T getNextData();
-    T getPrevData();
-    void restartCurrent(ListDirection direction);
 
     void pushFirst(T data);
     void pushLast(T data);
@@ -56,8 +48,7 @@ public:
     T popLast();
     void clearList();
 
-
-    class Iterator{ //todo: adina
+    class Iterator{
     private:
         ListNode<T>* data;
     public:
@@ -66,11 +57,15 @@ public:
 
         Iterator operator=(ListNode<T>* node);
         Iterator operator=(Iterator new_itr);
+
         Iterator& operator++();
+        Iterator& operator--();
         ListNode<T>* operator*();
+
         bool operator==(Iterator itr);
     };
-    Iterator begin();
+    Iterator beginFront();
+    Iterator beginBack();
     Iterator end();
 
     template<typename R>
@@ -108,9 +103,9 @@ ListResult List<T>::findNode(ListNode<T>* node) {
     if(this->isEmpty()) {
         return LIST_IS_EMPTY;
     }
-    for( auto myCurrent = this->getHead(); myCurrent->getNext() != nullptr;
-        myCurrent = myCurrent->getNext()) {
-        if(current == node) {
+    for(List<T>::Iterator itr = this->beginFront(); !(itr == this->end());
+                                                                    ++itr) {
+        if(itr == node) {
             return ELEMENT_EXISTS;
         }
     }
@@ -166,46 +161,6 @@ T List<T>::getTailData() const {
 }
 
 template<typename T>
-T List<T>::getCurrentData() const {
-    if(this->current == nullptr) {
-        T dummy = T();
-        return dummy;
-    }
-    return this->current->getData();
-}
-
-template<typename T>
-T List<T>::getNextData() {
-    if(this->current == nullptr) {
-        this->restartCurrent(LIST_FRONT);
-    }
-    T data = this->current->getData();
-    ListNode<T>* next = this->current->getNext();
-    this->current = next;
-    return data;
-}
-
-template<typename T>
-T List<T>::getPrevData() {
-    if(this->current == nullptr) {
-        this->restartCurrent(LIST_BACK);
-    }
-    T data = this->current->getData;
-    ListNode<T>* prev = this->current->getPrev();
-    this->current = prev;
-    return data;
-}
-
-template<typename T>
-void List<T>::restartCurrent(ListDirection direction) {
-    if(direction == LIST_FRONT) {
-        this->current = this->getHead();
-    } else if(direction == LIST_BACK){
-        this->current = this->getTail();
-    }
-}
-
-template<typename T>
 int List<T>::getLength() const {
     return this->length;
 }
@@ -218,11 +173,6 @@ ListNode<T> *List<T>::getHead() const {
 template<typename T>
 ListNode<T> *List<T>::getTail() const {
     return this->tail;
-}
-
-template<typename T>
-ListNode<T> *List<T>::getCurrent() const {
-    return this->current;
 }
 
 /** POP **/
@@ -272,7 +222,7 @@ T List<T>::popLast() {
 
 /** C'TOR**/
 template<typename T>
-List<T>::List() : length(0), head(nullptr), tail(nullptr), current(nullptr) {}
+List<T>::List() : length(0), head(nullptr), tail(nullptr) {}
 
 /** D'TOR **/
 template<typename T>
@@ -299,10 +249,7 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
     return os;
 }
 
-
-
 /**================================ ITERATOR ================================**/
-//todo: adina
 template<typename T>
 List<T>::Iterator::Iterator(ListNode<T> *ptr) : data(ptr) { }
 
@@ -315,6 +262,12 @@ typename List<T>::Iterator List<T>::Iterator::operator=(ListNode<T> *node) {
 template<typename T>
 typename List<T>::Iterator &List<T>::Iterator::operator++() {
     this->data = this->data->getNext();
+    return *this;
+}
+
+template<typename T>
+typename List<T>::Iterator &List<T>::Iterator::operator--() {
+    this->data = this->data->getPrev();
     return *this;
 }
 
@@ -335,13 +288,20 @@ bool List<T>::Iterator::operator==(Iterator itr) {
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::begin() {
+typename List<T>::Iterator List<T>::beginFront() {
     return this->head;
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::beginBack() {
+    return this->tail;
 }
 
 template<typename T>
 typename List<T>::Iterator List<T>::end() {
     return nullptr;
 }
+
+
 
 #endif //LINKEDLIST_LIST_H

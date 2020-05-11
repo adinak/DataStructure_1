@@ -8,7 +8,6 @@
 #include <iostream>
 #include "listNode.h"
 #include "list.h"
-#include <cassert>
 
 using namespace std;
 
@@ -53,7 +52,7 @@ void TestListNode::test1() {
 
 }
 
-void TestListNode::test2() {
+/*void TestListNode::test2() {
     List<int> my_list;
     cout << "# CREATED EMPTY LIST #" << endl;
 
@@ -77,7 +76,7 @@ void TestListNode::test2() {
     cout << "list length: " << my_list.getLength() << endl;
     cout << "head: " << my_list.getHeadData() << endl;
 }
-
+*/
 
 void TestListNode::test3() {
     List<int> my_list;
@@ -100,15 +99,24 @@ void TestListNode::test3() {
 
 void TestListNode::test4() {
     List<int> lst;
-    lst.pushFirst(8);
+    for(int j = 0; j < 10; j++){
+        lst.pushLast(j);
+    }
     List<int>::Iterator(lst.getHead());
 
-    List<int>::Iterator i = lst.head;
+    for(List<int>::Iterator i = lst.beginFront(); !(i == lst.end()); ++i){
+        cout << (*i)->getData() << ", ";
+    }
+    cout << endl;
+    for(List<int>::Iterator k = lst.beginBack(); !(k == lst.end()); --k){
+        cout << (*k)->getData() << ", ";
+        lst.popNode((*k));
+        cout << lst.getLength() << endl;
+    }
 
 }
 
 void TestListNode::test() {
-    test2();
     test3();
     test4();
 }
