@@ -56,16 +56,22 @@ public:
     T popLast();
     void clearList();
 
+
     class Iterator{ //todo: adina
     private:
-        ListNode<T>* iterator;
+        ListNode<T>* data;
     public:
-        explicit Iterator(ListNode<T>* ptr = nullptr);
+        Iterator(ListNode<T>* ptr = nullptr);
         ~Iterator() = default;
 
         Iterator operator=(ListNode<T>* node);
-        Iterator operator++();
+        Iterator operator=(Iterator new_itr);
+        Iterator& operator++();
+        ListNode<T>* operator*();
+        bool operator==(Iterator itr);
     };
+    Iterator begin();
+    Iterator end();
 
     template<typename R>
     friend std::ostream& operator<<(std::ostream& os, const List<R>& list);
@@ -293,16 +299,49 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
     return os;
 }
 
+
+
 /**================================ ITERATOR ================================**/
 //todo: adina
 template<typename T>
-List<T>::Iterator::Iterator(ListNode<T> *ptr) : iterator(ptr) { }
+List<T>::Iterator::Iterator(ListNode<T> *ptr) : data(ptr) { }
 
 template<typename T>
-List::Iterator List<T>::Iterator::operator=(ListNode<T> *node) {
-    this->iterator = node;
+typename List<T>::Iterator List<T>::Iterator::operator=(ListNode<T> *node) {
+    this->data = node;
     return *this;
 }
 
+template<typename T>
+typename List<T>::Iterator &List<T>::Iterator::operator++() {
+    this->data = this->data->getNext();
+    return *this;
+}
+
+template<typename T>
+ListNode<T> *List<T>::Iterator::operator*() {
+    return this->data;
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::Iterator::operator=(List::Iterator new_itr) {
+    this->data = new_itr->data;
+    return *this;
+}
+
+template<typename T>
+bool List<T>::Iterator::operator==(Iterator itr) {
+    return (this->data == itr.data);
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::begin() {
+    return this->head;
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::end() {
+    return nullptr;
+}
 
 #endif //LINKEDLIST_LIST_H
