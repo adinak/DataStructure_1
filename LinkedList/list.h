@@ -15,7 +15,7 @@ typedef enum {LIST_SUCCESS, LIST_IS_EMPTY, ELEMENT_EXISTS,
 
 template<typename T>
 class List {
-private:
+protected:
     int length;
     ListNode<T>* head;
     ListNode<T>* tail;
@@ -40,8 +40,8 @@ public:
     ListNode<T>* getHead() const;
     ListNode<T>* getTail() const;
 
-    void pushFirst(T data);
-    void pushLast(T data);
+    ListNode<T>* pushFirst(T data);
+    ListNode<T>* pushLast(T data);
 
     ListResult popNode(ListNode<T>* node);
     T popFirst();
@@ -120,7 +120,7 @@ bool List<T>::isEmpty() const {
 
 /** PUSH **/
 template<typename T>
-void List<T>::pushFirst(T data) {
+ListNode<T>* List<T>::pushFirst(T data) {
     auto* newNode = new ListNode<T>(data);
     newNode->attachNode(nullptr, this->head);
     this->setHead(newNode);
@@ -128,10 +128,11 @@ void List<T>::pushFirst(T data) {
         this->setTail(newNode);
     }
     this->increaseLength();
+    return newNode;
 }
 
 template<typename T>
-void List<T>::pushLast(T data) {
+ListNode<T>* List<T>::pushLast(T data) {
     auto* newNode = new ListNode<T>(data);
     newNode->attachNode(this->tail, nullptr);
     this->setTail(newNode);
@@ -139,6 +140,7 @@ void List<T>::pushLast(T data) {
         this->setHead(newNode);
     }
     this->increaseLength();
+    return newNode;
 }
 
 /** GET **/
