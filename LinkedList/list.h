@@ -56,6 +56,17 @@ public:
     T popLast();
     void clearList();
 
+    class Iterator{ //todo: adina
+    private:
+        ListNode<T>* iterator;
+    public:
+        explicit Iterator(ListNode<T>* ptr = nullptr);
+        ~Iterator() = default;
+
+        Iterator operator=(ListNode<T>* node);
+        Iterator operator++();
+    };
+
     template<typename R>
     friend std::ostream& operator<<(std::ostream& os, const List<R>& list);
 
@@ -280,6 +291,17 @@ std::ostream &operator<<(std::ostream &os, const List<T> &list) {
         os << node->getData() << " ";
     }
     return os;
+}
+
+/**================================ ITERATOR ================================**/
+//todo: adina
+template<typename T>
+List<T>::Iterator::Iterator(ListNode<T> *ptr) : iterator(ptr) { }
+
+template<typename T>
+List::Iterator List<T>::Iterator::operator=(ListNode<T> *node) {
+    this->iterator = node;
+    return *this;
 }
 
 

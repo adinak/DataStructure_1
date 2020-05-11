@@ -17,6 +17,7 @@ private:
     void test1();
     void test2();
     void test3();
+    void test4();
 
 public:
     TestListNode() = default;
@@ -97,9 +98,21 @@ void TestListNode::test3() {
     cout << "list length: " << my_list.getLength() << endl;
 }
 
+void TestListNode::test4() {
+    List<int> lst;
+    lst.pushFirst(8);
+    List<int>::Iterator(lst.getHead());
+
+    List<int>::Iterator i = lst.head;
+
+}
+
 void TestListNode::test() {
     test2();
     test3();
+    test4();
 }
+
+
 
 #endif //LINKEDLIST_TEST_LINKEDLIST_H
