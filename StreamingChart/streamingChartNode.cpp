@@ -52,6 +52,12 @@ void StreamingChartNodeZero::popSong(int artistID, ListNode<Song*>* songNode) {
     temp_list->popNode(songNode);
 }
 
+AVLTree<int, List<Song *>> *StreamingChartNodeZero::getArtistTree() {
+    return &this->songChart;
+}
+
+
+
 /**================ TREE NODE ==================**/
 /**      C'TOR & D'TOR       **/
 StreamingChartNodeTree::StreamingChartNodeTree(int numOfStreams)

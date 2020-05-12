@@ -11,45 +11,30 @@
 
 typedef enum{CHART_SUCCESS, CHART_FAIL,
              CHART_NOT_ENOUGH_SONGS} StreamingChartResult;
-typedef enum{CHART_FRONT, CHART_BACK} ChartDirection;
 
-class streamingChart {
+class streamingChart : public List<StreamingChartNode*>{
 private:
-    List<StreamingChartNode*> streamingChartList;
-    StreamingChartNode* zero;
-    StreamingChartNode* tail;
-    StreamingChartNode* current;
-    int totalNumberOfSongs;
+    int totalNumberOfSongs; //todo: will be easier to update from BigData class
 
-    void setZero(StreamingChartNode* newZero);
-    void setTail(StreamingChartNode* newChartTail);
-    void resetCurrent(ChartDirection direction);
+    void increaseTotalNumberOfSongs(int numOfSongs);
+    void decreaseTotalNumberOfSongs(int numOfSongs);
 
 public:
     streamingChart();
     ~streamingChart() = default;
 
-    StreamingChartNode* getZero() const;
-    StreamingChartNode* getTail() const;
-    StreamingChartNode* getNext();
-    StreamingChartNode* getPrev();
-    int getCurrentNumberOfStreams() const;
+    int getNumberOfStreams(StreamingChartNode* chartNode) const;
+    int getTotalNumberOfSongs() const; //todo
     StreamingChartResult getBestSongs(int* artists, int* songs, int amountOfSongs);
 
-    StreamingChartResult initializeCurrentToNode(StreamingChartNode* chartNode);
-    //todo:first check if node exists
-    StreamingChartResult pushStreamsChart(int numOfStreams);
-    //call when first time adding an artist
+    StreamingChartNode* pushStreamsChart(int numOfStreams);
     void** pushNewArtist(int artistID, int numOfSongs);
-    StreamingChartResult pushChartNode(int numOfStreams);
-    //todo: add song with number of streams
-    StreamingChartNodeTree* pushSong(int artistID, int songID,
-                                        int numOfStreams);
+    StreamingChartNode* pushSong(int artistID, int songID, int numOfStreams);
 
-    StreamingChartResult popSong(int artistID, int songID);
-    StreamingChartResult popSong(ListNode<Song>* songNode);
-    StreamingChartResult popChartNode(int numOfStreams);
-
+    void popArtist(int artistID); //todo: started implementing removeArtist -
+                                    // not very efficient
+    StreamingChartResult popChartNode(int numOfStreams); //todo: can use list
+                                                         //pop function
 };
 
 

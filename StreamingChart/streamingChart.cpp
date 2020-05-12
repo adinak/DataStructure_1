@@ -52,7 +52,7 @@ StreamingChartNode* streamingChart::pushStreamsChart(int numOfStreams) {
     }
 }
 
-void **streamingChart::pushNewArtist(int artistID, int numOfSongs) {
+void** streamingChart::pushNewArtist(int artistID, int numOfSongs) {
     StreamingChartNode* chartNode;
     if(this->getHead() == nullptr){
         chartNode = this->pushStreamsChart(0);
@@ -62,12 +62,13 @@ void **streamingChart::pushNewArtist(int artistID, int numOfSongs) {
     chartNode->pushArtist(artistID);
     void** song_array = new void*[numOfSongs];
     auto* chartZero =  dynamic_cast<StreamingChartNodeZero*>(chartNode);
-    List<Song*>* song_list = chartZero->getArtistTree()->find(artistID);
+    auto* song_list = new List<Song*>;
 
     for (int i = 0; i < numOfSongs; ++i) {
         auto new_song = new Song(artistID, i);
         song_array[i] = song_list->pushLast(new_song);
     }
+    chartZero->getArtistTree()->insert(artistID, *song_list); //todo
 
     this->increaseTotalNumberOfSongs(numOfSongs);
     return song_array;

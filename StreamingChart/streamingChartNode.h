@@ -6,6 +6,7 @@
 #define WET1_STREAMINGCHARTNODE_H
 
 #include "AVLTree.h"
+#include "list.h"
 #include "Song.h"
 
 /**================= FATHER =====================**/
@@ -17,8 +18,9 @@ public:
     StreamingChartNode(int numOfStreams);
     virtual ~StreamingChartNode() = 0;
 
-    virtual void pushSong(int artistID, int songID) = 0;
+    virtual void pushSong(int artistID, int songID) = 0;;
     virtual void pushArtist(int artistID) = 0;
+
     virtual void popSong(int artistID, int songID) = 0;
     virtual void popArtist(int artistID) = 0;
     int getNumberOfStreams() const;
@@ -28,15 +30,17 @@ public:
 
 class StreamingChartNodeZero : public StreamingChartNode {
 private:
-    AVLTree<int, List<Song*>> songChart;
+    AVLTree<int, List<Song*>*> songChart;
 public:
-    explicit StreamingChartNodeZero(int numOfStreams);
+    explicit StreamingChartNodeZero(int numOfStreams = 0);
     ~StreamingChartNodeZero() override;
+
+    AVLTree<int, List<Song*>>* getArtistTree();
 
     void pushSong(int artistID, int songID) override ;
     void pushArtist(int artistID) override;
 
-    void popSong(int artistID, int songID); //todo: do we need this?
+    void popSong(int artistID, int songID) override ; //todo: do we need this?
     void popSong(int artistID, ListNode<Song*>* songNode);
     void popArtist(int artistID) override;
 };

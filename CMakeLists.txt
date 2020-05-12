@@ -8,7 +8,7 @@ set(CHART ./StreamingChart)
 set(TREE ./AVLTree)
 
 include_directories(${LIST})
-#include_directories(${CHART})
+include_directories(${CHART})
 include_directories(${TREE})
 
 add_executable(Wet1
@@ -16,10 +16,10 @@ add_executable(Wet1
                 ${LIST}/list.h
                 ${LIST}/listNode.h
                 ${LIST}/test_LinkedList.h
-                #${CHART}/streamingChart.h
-                #${CHART}/streamingChart.cpp
-                #${CHART}/streamingChartNode.h
-                #${CHART}/streamingChartNode.cpp
+                ${CHART}/streamingChart.h
+                ${CHART}/streamingChart.cpp
+                ${CHART}/streamingChartNode.h
+                ${CHART}/streamingChartNode.cpp
                 ${CHART}/Song.h
                 ${CHART}/Song.cpp
                 ${TREE}/AVLTree.h
