@@ -4,39 +4,38 @@
 
 #include "streamingChart.h"
 
-/**================================ PRIVATE ================================**/
-void streamingChart::increaseTotalNumberOfSongs(int numOfSongs) {
-    this->totalNumberOfSongs += numOfSongs;
-}
-
-void streamingChart::decreaseTotalNumberOfSongs(int numOfSongs) {
-    this->totalNumberOfSongs -= numOfSongs;
-}
 /**================================ PUBLIC =================================**/
 /**      C'TOR       **/
-streamingChart::streamingChart() : List<StreamingChartNode *>(),
-                                    totalNumberOfSongs(0) { }
+streamingChart::streamingChart() : List<StreamingChartNode *>() { }
 
 /**      GET       **/
 int streamingChart::getNumberOfStreams(StreamingChartNode *chartNode) const {
     return chartNode->getNumberOfStreams();
 }
 
-int streamingChart::getTotalNumberOfSongs() const {
-    return this->totalNumberOfSongs;
-}
-
-StreamingChartResult streamingChart::getBestSongs(int *artists, int *songs,
-                                                    int amountOfSongs) {
-    if(artists == nullptr || songs == nullptr) {
-        return CHART_FAIL;
+void streamingChart::getBestSongs(int *artists, int *songs, int amountOfSongs) {
+    for(List<StreamingChartNode*>::Iterator itr = this->beginBack();
+        !(itr == this->end()); --itr) {
+        int delta = -1;
+        if((*itr)->getData()->getNumberOfStreams() == 0) {
+            //put list size of amountOfSongs into array
+        } else {
+            auto* chart_node = dynamic_cast<StreamingChartNodeTree*>
+                                ((*itr)->getData());
+            if(amountOfSongs <= chart_node->getNumberOfSongs()) {
+                //generate list from tree
+                //put list size of amountOfSongs into array
+                break;
+            } else {
+                delta = (chart_node->getNumberOfSongs() - amountOfSongs);
+                //generate list from tree
+                //put list size of chart_node->getNumberOfSongs() into array
+                amountOfSongs = delta;
+            }
+        }
     }
-    if(amountOfSongs > this->totalNumberOfSongs) {
-        return CHART_NOT_ENOUGH_SONGS;
-    }
-    //todo: implementation is complicated, saving for last
+    //todo: make a function that transfers a list into an array
 
-    return CHART_SUCCESS;
 }
 
 /**      PUSH       **/
@@ -62,55 +61,45 @@ void** streamingChart::pushNewArtist(int artistID, int numOfSongs) {
     chartNode->pushArtist(artistID);
     void** song_array = new void*[numOfSongs];
     auto* chartZero =  dynamic_cast<StreamingChartNodeZero*>(chartNode);
-    auto* song_list = new List<Song*>;
+    auto song_list = new List<Song*>;
 
     for (int i = 0; i < numOfSongs; ++i) {
         auto new_song = new Song(artistID, i);
         song_array[i] = song_list->pushLast(new_song);
     }
-    chartZero->getArtistTree()->insert(artistID, *song_list); //todo
-
-    this->increaseTotalNumberOfSongs(numOfSongs);
+    chartZero->getArtistTree()->insert(artistID, song_list);
     return song_array;
 }
 
-StreamingChartNode *
-streamingChart::pushSong(int artistID, int songID, int numOfStreams) {
-    for(List<StreamingChartNode*>::Iterator itr = this->beginFront();
-        !(itr == this->end()); ++itr) {
-        if(this->getNumberOfStreams((*itr)->getData()) == numOfStreams) {
-            (*itr)->getData()->pushSong(artistID, songID);
-            return (*itr)->getData();
-        }
+void*
+streamingChart::addToSongInZero(ListNode<Song *>* song, int artistID,
+        int songID, int numOfStreams) {
+    auto* chart_zero = dynamic_cast<StreamingChartNodeZero *>(this->getHeadData());
+    chart_zero->popSong(artistID, song);
+    if(this->getHead()->getNext() == nullptr) {
+        this->pushStreamsChart(numOfStreams);
     }
-    StreamingChartNode* newChart = this->pushStreamsChart(numOfStreams);
-    newChart->pushSong(artistID, songID);
-    return newChart;
+    StreamingChartNode* next_chart = this->getHead()->getNext()->getData();
+    return next_chart->pushSong(artistID, songID);
 }
 
-/**      POP       **/
-void streamingChart::popArtist(int artistID) {
-    for(List<StreamingChartNode*>::Iterator itr = this->beginFront();
-        !(itr == this->end()); ++itr) {
-
-        if(this->getNumberOfStreams((*itr)->getData()) == 0) {
-            auto* chart_zero = dynamic_cast<StreamingChartNodeZero*>
-                                ((*itr)->getData());
-            List<Song*>* song_list = chart_zero->getArtistTree()->find(artistID);
-            if(song_list != nullptr){
-                int length = song_list->getLength();
-                song_list->clearList();
-                this->decreaseTotalNumberOfSongs(length);
-            }
-
-        } else {
-            auto* chartNode = dynamic_cast<StreamingChartNodeTree*>
-                                ((*itr)->getData());
-
-        }
-
+void*
+streamingChart::addToSong(ListNode<StreamingChartNodeTree *>* chart,
+        int artistID, int songID, int numOfStreams) {
+    auto* chart_node = dynamic_cast<StreamingChartNodeTree*>(chart->getData());
+    chart_node->popSong(artistID, songID);
+    if(chart->getNext() == nullptr) {
+        this->pushStreamsChart(numOfStreams);
     }
+    chart = chart->getNext();
+    chart_node = dynamic_cast<StreamingChartNodeTree*>(chart->getData());
+    return chart_node->pushSong(artistID, songID);
 }
+
+
+
+
+
 
 
 
