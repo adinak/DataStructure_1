@@ -84,7 +84,7 @@ Test_result TestAVLTree::testAdinasList() {
 //    }
 
     List<AVLTree<int,int>*> lst;
-    lst.restartCurrent();
+    //lst.restartCurrent();
     for(AVLTree<int,int>* tree = lst.getCurrentData(); tree != nullptr; tree = lst.getNextData()){
         delete tree;
     }

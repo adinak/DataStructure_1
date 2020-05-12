@@ -8,7 +8,6 @@
 #include <iostream>
 #include "listNode.h"
 #include "list.h"
-#include <cassert>
 
 using namespace std;
 
@@ -17,6 +16,7 @@ private:
     void test1();
     void test2();
     void test3();
+    void test4();
 
 public:
     TestListNode() = default;
@@ -52,7 +52,7 @@ void TestListNode::test1() {
 
 }
 
-void TestListNode::test2() {
+/*void TestListNode::test2() {
     List<int> my_list;
     cout << "# CREATED EMPTY LIST #" << endl;
 
@@ -61,12 +61,12 @@ void TestListNode::test2() {
     }
 
     cout << my_list << endl;
-    my_list.restartCurrent();
+    my_list.restartCurrent(LIST_FRONT);
     bool flag = true;
     while(my_list.getCurrent() != nullptr) {
         cout << "current is: " << my_list.getNextData() << endl;
         if(my_list.getCurrentData() == 10 && flag) {
-            my_list.restartCurrent();
+            my_list.restartCurrent(LIST_FRONT);
             flag = false;
         }
     }
@@ -76,7 +76,7 @@ void TestListNode::test2() {
     cout << "list length: " << my_list.getLength() << endl;
     cout << "head: " << my_list.getHeadData() << endl;
 }
-
+*/
 
 void TestListNode::test3() {
     List<int> my_list;
@@ -97,9 +97,30 @@ void TestListNode::test3() {
     cout << "list length: " << my_list.getLength() << endl;
 }
 
-void TestListNode::test() {
-    test2();
-    test3();
+void TestListNode::test4() {
+    List<int> lst;
+    for(int j = 0; j < 10; j++){
+        lst.pushLast(j);
+    }
+    List<int>::Iterator(lst.getHead());
+
+    for(List<int>::Iterator i = lst.beginFront(); !(i == lst.end()); ++i){
+        cout << (*i)->getData() << ", ";
+    }
+    cout << endl;
+    for(List<int>::Iterator k = lst.beginBack(); !(k == lst.end()); --k){
+        cout << (*k)->getData() << ", ";
+        lst.popNode((*k));
+        cout << lst.getLength() << endl;
+    }
+
 }
+
+void TestListNode::test() {
+    test3();
+    test4();
+}
+
+
 
 #endif //LINKEDLIST_TEST_LINKEDLIST_H
