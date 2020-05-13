@@ -10,11 +10,7 @@ int StreamingChartNode::getNumberOfStreams() const {
     return this->numberOfStreams;
 }
 
-StreamingChartNode::StreamingChartNode(int numOfStreams)
-        : numberOfStreams(numOfStreams){
-}
-
-int StreamingChartNode::getNumberOfSongs() {
+int StreamingChartNode::getNumberOfSongs() const {
     return this->numberOfSongs;
 }
 
@@ -29,8 +25,9 @@ void StreamingChartNode::decreaseNumOfSongs() {
 
 /**================ ZERO NODE ==================**/
 /**      C'TOR & D'TOR       **/
-StreamingChartNodeZero::StreamingChartNodeZero(int numOfStreams)
-        : StreamingChartNode(numOfStreams) { }
+StreamingChartNodeZero::StreamingChartNodeZero(int numOfStreams) {
+    this->numberOfStreams = numOfStreams;
+}
 
 StreamingChartNodeZero::~StreamingChartNodeZero() {
     this->songChart.clear();
@@ -86,8 +83,9 @@ void StreamingChartNodeZero::popSong(int artistID, int songID) {
 
 /**================ TREE NODE ==================**/
 /**      C'TOR & D'TOR       **/
-StreamingChartNodeTree::StreamingChartNodeTree(int numOfStreams)
-        : StreamingChartNode(numOfStreams) { }
+StreamingChartNodeTree::StreamingChartNodeTree(int numOfStreams) {
+    this->numberOfStreams = numOfStreams;
+}
 
 StreamingChartNodeTree::~StreamingChartNodeTree() {
     this->songChart.clear();

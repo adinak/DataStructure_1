@@ -110,7 +110,7 @@ streamingChart::addToSong(ListNode<StreamingChartNodeTree *>* chart,
     return chart_node->pushSong(artistID, songID);
 }
 
-std::ostream& operator<<(std::ostream& os, List<StreamingChartNode*> &list) {
+std::ostream &operator<<(ostream &os, streamingChart &list) {
     for(List<StreamingChartNode*>::Iterator node = list.beginFront();
         !(node == list.end()); ++node) {
         os << "Streams: " << (*node)->getData()->getNumberOfStreams() << " ";
@@ -118,6 +118,7 @@ std::ostream& operator<<(std::ostream& os, List<StreamingChartNode*> &list) {
     }
     return os;
 }
+
 
 
 

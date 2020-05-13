@@ -637,6 +637,7 @@ AVLTreeResult AVLTree<K, D>::remove(const K &key) {
         balanceNode(curr);
         son_key = curr->getKey();
     }
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>

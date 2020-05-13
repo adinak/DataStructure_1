@@ -12,12 +12,11 @@
 /**================= FATHER =====================**/
 
 class StreamingChartNode{
-private:
-    const int numberOfStreams;
+protected:
+    int numberOfStreams;
     int numberOfSongs;
 public:
-    StreamingChartNode(int numOfStreams);
-    virtual ~StreamingChartNode() = 0;
+    virtual ~StreamingChartNode() {};
 
     virtual void* pushSong(int artistID, int songID) = 0;;
     virtual void pushArtist(int artistID) = 0;
@@ -26,7 +25,7 @@ public:
     virtual void popArtist(int artistID) = 0;
 
     int getNumberOfStreams() const;
-    int getNumberOfSongs();
+    int getNumberOfSongs() const;
     void increaseNumOfSongs();
     void decreaseNumOfSongs();
 };

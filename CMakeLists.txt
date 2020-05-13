@@ -15,7 +15,6 @@ add_executable(Wet1
                 main.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h
-                ${LIST}/test_LinkedList.h
                 ${CHART}/streamingChart.h
                 ${CHART}/streamingChart.cpp
                 ${CHART}/streamingChartNode.h
@@ -24,4 +23,6 @@ add_executable(Wet1
                 ${CHART}/Song.cpp
                 ${TREE}/AVLTree.h
                 Artist.h
-                Artist.cpp StreamingChart/Test_StreamingChart.h)
+                Artist.cpp
+                ${LIST}/test_LinkedList.h
+                ${CHART}/Test_StreamingChart.h)

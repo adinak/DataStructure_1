@@ -26,11 +26,8 @@ public:
                         int numOfStreams);
     void* addToSong(ListNode<StreamingChartNodeTree*>* chart, int artistID,
                     int songID, int numOfStreams);
-    friend std::ostream& operator<<(std::ostream& os, const
-    List<StreamingChartNode*>& list);
+    friend std::ostream& operator<<(std::ostream& os, streamingChart& list);
 
 };
-
-//todo: do we need popArtist()? if so better to implement in StreamingChartNode
 
 #endif //WET1_STREAMINGCHART_H

@@ -6,6 +6,7 @@
 #define WET1_TEST_STREAMINGCHART_H
 
 #include "streamingChart.h"
+#include "streamingChartNode.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ public:
 };
 
 void TestStreamingChart::test_addingNodes() {
-    cout << "num of nodes" << streams_list.getLength() << endl;
+    cout << "num of nodes " << streams_list.getLength() << endl;
     for(int i = 0; i < 10; i++) {
         streams_list.pushStreamsChart(i);
     }

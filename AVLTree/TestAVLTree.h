@@ -56,6 +56,7 @@ Test_result TestAVLTree::test() {
 }
 
 Test_result TestAVLTree::testAdinasList() {
+
     class doSomething{
     public:
         doSomething() = default;
