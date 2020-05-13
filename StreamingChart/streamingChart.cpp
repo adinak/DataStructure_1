@@ -3,6 +3,20 @@
 //
 
 #include "streamingChart.h"
+#include "streamingChartNode.h"
+
+/**================================ PRIVATE =================================**/
+void streamingChart::convertLinkedListToArray(int *array, List<Song*> *list,
+                                              int size, int start) {
+    for(List<Song*>::Iterator i = list->beginFront(); !(i == list->end()); ++i){
+        size--;
+        if(size == 0) {
+            break;
+        }
+
+    }
+
+}
 
 /**================================ PUBLIC =================================**/
 /**      C'TOR       **/
@@ -94,6 +108,15 @@ streamingChart::addToSong(ListNode<StreamingChartNodeTree *>* chart,
     chart = chart->getNext();
     chart_node = dynamic_cast<StreamingChartNodeTree*>(chart->getData());
     return chart_node->pushSong(artistID, songID);
+}
+
+std::ostream& operator<<(std::ostream& os, List<StreamingChartNode*> &list) {
+    for(List<StreamingChartNode*>::Iterator node = list.beginFront();
+        !(node == list.end()); ++node) {
+        os << "Streams: " << (*node)->getData()->getNumberOfStreams() << " ";
+        os << "Songs: " << (*node)->getData()->getNumberOfSongs() << std::endl;
+    }
+    return os;
 }
 
 

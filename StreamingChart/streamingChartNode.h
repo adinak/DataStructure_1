@@ -37,7 +37,7 @@ class StreamingChartNodeZero : public StreamingChartNode {
 private:
     AVLTree<int, List<Song*>*> songChart;
 public:
-    explicit StreamingChartNodeZero(int numOfStreams = 0);
+    StreamingChartNodeZero(int numOfStreams = 0);
     ~StreamingChartNodeZero() override;
 
     AVLTree<int, List<Song*>*>* getArtistTree();
@@ -55,7 +55,7 @@ class StreamingChartNodeTree : public StreamingChartNode{
 private:
     AVLTree<int, AVLTree<int, Song*>> songChart;
 public:
-    explicit StreamingChartNodeTree(int numOfStreams);
+    StreamingChartNodeTree(int numOfStreams);
     ~StreamingChartNodeTree() override;
 
     AVLTree<int, AVLTree<int, Song*>>* getArtistTree();

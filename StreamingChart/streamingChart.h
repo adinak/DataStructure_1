@@ -11,7 +11,8 @@
 
 class streamingChart : public List<StreamingChartNode*>{
 private:
-    void convertLinkedListToArray(int *array, List<int>* list, int size);
+    void convertLinkedListToArray(int *array, List<Song*>* list, int size,
+            int start);
 public:
     streamingChart();
     ~streamingChart() = default;
@@ -25,6 +26,8 @@ public:
                         int numOfStreams);
     void* addToSong(ListNode<StreamingChartNodeTree*>* chart, int artistID,
                     int songID, int numOfStreams);
+    friend std::ostream& operator<<(std::ostream& os, const
+    List<StreamingChartNode*>& list);
 
 };
 

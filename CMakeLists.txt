@@ -24,4 +24,4 @@ add_executable(Wet1
                 ${CHART}/Song.cpp
                 ${TREE}/AVLTree.h
                 Artist.h
-                Artist.cpp )
+                Artist.cpp StreamingChart/Test_StreamingChart.h)
