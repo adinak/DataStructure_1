@@ -50,7 +50,7 @@ void TestStreamingChart::test_addingSongs() {
 
     cout << streams_list;
 
-    auto* song1 = (ListNode<StreamingChartNode*>*)artist2[6];
+    auto* song1 = (ChartNode)artist2[6];
     streams_list.addToSong(song1, 13, 6, 2);
 
     cout << streams_list;
