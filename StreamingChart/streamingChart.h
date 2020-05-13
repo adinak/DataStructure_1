@@ -9,7 +9,15 @@
 #include "streamingChartNode.h"
 #include "AVLTree.h"
 
-class streamingChart : public List<StreamingChartNode*>{
+typedef ListNode<StreamingChartNode*>* ChartNode;
+typedef ListNode<StreamingChartNodeZero*>* ChartZero;
+typedef ListNode<StreamingChartNodeTree*>* ChartTree;
+
+typedef StreamingChartNode* DataChart;
+typedef StreamingChartNodeZero* DataZero;
+typedef StreamingChartNodeTree* DataTree;
+
+class streamingChart : public List<DataChart>{
 private:
     void convertLinkedListToArray(int *array, List<Song*>* list, int size,
             int start);
@@ -17,15 +25,18 @@ public:
     streamingChart();
     ~streamingChart() = default;
 
-    int getNumberOfStreams(StreamingChartNode* chartNode) const;
+    int getNumberOfStreams(DataChart chartNode) const;
     void getBestSongs(int* artists, int* songs, int amountOfSongs);
 
-    ListNode<StreamingChartNode*>* pushStreamsChart(int numOfStreams);
+    ChartNode pushStreamsLast(int numOfStreams);
+    ChartNode pushStreamsNode(int numOfStreams, ChartNode afterNode);
     void** pushNewArtist(int artistID, int numOfSongs);
+
     void* addToSongInZero(ListNode<Song *>* song, int artistID, int songID,
                         int numOfStreams);
-    void* addToSong(ListNode<StreamingChartNodeTree*>* chart, int artistID,
-                    int songID, int numOfStreams);
+    void* addToSong(ChartNode currentChart, int artistID, int songID,
+                    int numOfStreams);
+
     friend std::ostream& operator<<(std::ostream& os, streamingChart& list);
 
 };

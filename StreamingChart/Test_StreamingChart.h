@@ -31,7 +31,7 @@ public:
 void TestStreamingChart::test_addingNodes() {
     cout << "num of nodes " << streams_list.getLength() << endl;
     for(int i = 0; i < 10; i++) {
-        streams_list.pushStreamsChart(i);
+        streams_list.pushStreamsLast(i);
     }
     cout << streams_list;
 
@@ -50,7 +50,7 @@ void TestStreamingChart::test_addingSongs() {
 
     cout << streams_list;
 
-    auto* song1 = (ListNode<StreamingChartNodeTree*>*)artist2[6];
+    auto* song1 = (ListNode<StreamingChartNode*>*)artist2[6];
     streams_list.addToSong(song1, 13, 6, 2);
 
     cout << streams_list;

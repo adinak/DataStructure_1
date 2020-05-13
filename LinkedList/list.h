@@ -146,8 +146,8 @@ ListNode<T>* List<T>::pushLast(T data) {
 
 template<typename T>
 ListNode<T> *List<T>::pushNode(ListNode<T>* afterNode, ListNode<T>* newNode) {
-
-    return nullptr;
+    newNode->attachNode(afterNode, afterNode->getNext());
+    return newNode;
 }
 
 /** GET **/
