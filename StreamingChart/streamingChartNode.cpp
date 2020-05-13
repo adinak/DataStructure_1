@@ -14,12 +14,12 @@ int StreamingChartNode::getNumberOfSongs() const {
     return this->numberOfSongs;
 }
 
-void StreamingChartNode::increaseNumOfSongs() {
-    this->numberOfSongs++;
+void StreamingChartNode::increaseNumOfSongs(int num) {
+    this->numberOfSongs += num;
 }
 
-void StreamingChartNode::decreaseNumOfSongs() {
-    this->numberOfSongs--;
+void StreamingChartNode::decreaseNumOfSongs(int num) {
+    this->numberOfSongs -= num;
 }
 
 
@@ -27,6 +27,7 @@ void StreamingChartNode::decreaseNumOfSongs() {
 /**      C'TOR & D'TOR       **/
 StreamingChartNodeZero::StreamingChartNodeZero(int numOfStreams) {
     this->numberOfStreams = numOfStreams;
+    this->numberOfSongs = 0;
 }
 
 StreamingChartNodeZero::~StreamingChartNodeZero() {
@@ -56,9 +57,9 @@ void StreamingChartNodeZero::popArtist(int artistID) {
 }
 
 void StreamingChartNodeZero::popSong(int artistID, ListNode<Song*>* songNode) {
-    List<Song*>** temp_list = this->songChart.find(artistID);
-    (*temp_list)->popNode(songNode);
-    if((*temp_list)->getLength() == 0) {
+    List<Song*>* temp_list = *(this->songChart.find(artistID));
+    temp_list->popNode(songNode);
+    if(temp_list->getLength() == 0) {
         this->popArtist(artistID);
     }
     this->decreaseNumOfSongs();
@@ -85,6 +86,7 @@ void StreamingChartNodeZero::popSong(int artistID, int songID) {
 /**      C'TOR & D'TOR       **/
 StreamingChartNodeTree::StreamingChartNodeTree(int numOfStreams) {
     this->numberOfStreams = numOfStreams;
+    this->numberOfSongs = 0;
 }
 
 StreamingChartNodeTree::~StreamingChartNodeTree() {
@@ -102,7 +104,7 @@ void* StreamingChartNodeTree::pushSong(int artistID, int songID) {
     temp_tree->insert(songID,new_song);
     this->increaseNumOfSongs();
 
-    void* ptr = static_cast<void*>(this);
+    void* ptr = this;
     return ptr;
 }
 

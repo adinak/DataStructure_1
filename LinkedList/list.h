@@ -42,6 +42,7 @@ public:
 
     ListNode<T>* pushFirst(T data);
     ListNode<T>* pushLast(T data);
+    ListNode<T>* pushNode(ListNode<T>* afterNode, ListNode<T>* newNode);
 
     ListResult popNode(ListNode<T>* node);
     T popFirst();
@@ -141,6 +142,12 @@ ListNode<T>* List<T>::pushLast(T data) {
     }
     this->increaseLength();
     return newNode;
+}
+
+template<typename T>
+ListNode<T> *List<T>::pushNode(ListNode<T>* afterNode, ListNode<T>* newNode) {
+
+    return nullptr;
 }
 
 /** GET **/
@@ -303,7 +310,6 @@ template<typename T>
 typename List<T>::Iterator List<T>::end() {
     return nullptr;
 }
-
 
 
 #endif //LINKEDLIST_LIST_H

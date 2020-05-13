@@ -20,7 +20,7 @@ public:
     int getNumberOfStreams(StreamingChartNode* chartNode) const;
     void getBestSongs(int* artists, int* songs, int amountOfSongs);
 
-    StreamingChartNode* pushStreamsChart(int numOfStreams);
+    ListNode<StreamingChartNode*>* pushStreamsChart(int numOfStreams);
     void** pushNewArtist(int artistID, int numOfSongs);
     void* addToSongInZero(ListNode<Song *>* song, int artistID, int songID,
                         int numOfStreams);

@@ -360,6 +360,7 @@ AVLTreeResult AVLTree<K, D>::getPreOrder(TreeNode<K, D> *root_node, List <D> *or
     ordered_list->pushLast(root_node->getData());
     getPreOrder(root_node->getLeft(),ordered_list);
     getPreOrder(root_node->getRight(),ordered_list);
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -368,6 +369,7 @@ AVLTreeResult AVLTree<K, D>::getInOrder(TreeNode<K, D> *root_node, List<D> *orde
     getInOrder(root_node->getLeft(),ordered_list);
     ordered_list->pushLast(root_node->getData());
     getInOrder(root_node->getRight(),ordered_list);
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -376,6 +378,7 @@ AVLTreeResult AVLTree<K, D>::getPostOrder(TreeNode<K, D> *root_node, List<D> *or
     getPostOrder(root_node->getLeft(),ordered_list);
     getPostOrder(root_node->getRight(),ordered_list);
     ordered_list->pushLast(root_node->getData());
+    return AVL_SUCCESS;
 }
 
 
@@ -389,6 +392,7 @@ AVLTreeResult AVLTree<K, D>::getPreOrder(TreeNode<K, D> *root_node, List<D> *ord
     n--;
     getPreOrder(root_node->getLeft(), ordered_list, n);
     getPreOrder(root_node->getRight(), ordered_list, n);
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -399,6 +403,7 @@ AVLTreeResult AVLTree<K, D>::getInOrder(TreeNode<K, D> *root_node, List<D> *orde
     ordered_list->pushLast(root_node->getData());
     n--;
     getInOrder(root_node->getRight(), ordered_list, n);
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>
@@ -409,6 +414,7 @@ AVLTreeResult AVLTree<K, D>::getPostOrder(TreeNode<K, D> *root_node, List<D> *or
     if(n == 0) return AVL_SUCCESS;
     ordered_list->pushLast(root_node->getData());
     n--;
+    return AVL_SUCCESS;
 }
 
 

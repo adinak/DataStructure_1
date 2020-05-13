@@ -26,8 +26,8 @@ public:
 
     int getNumberOfStreams() const;
     int getNumberOfSongs() const;
-    void increaseNumOfSongs();
-    void decreaseNumOfSongs();
+    void increaseNumOfSongs(int num = 1);
+    void decreaseNumOfSongs(int num = 1);
 };
 
 /**================ ZERO NODE ==================**/
