@@ -31,25 +31,33 @@ StreamingChartNodeZero::StreamingChartNodeZero(int numOfStreams) {
 }
 
 StreamingChartNodeZero::~StreamingChartNodeZero() {
+    List<List<Song*>*> tmp_list;
+    this->getArtistTree()->getTreeToList(IN, &tmp_list);
+    List<Song*> list_to_delete;
+    for(List<List<Song*>*>::Iterator song_list = tmp_list.beginFront();
+            !(song_list == tmp_list.end()); ++song_list) {
+        for(List<Song*>::Iterator song = (*song_list)->getData()->beginFront();
+            !(song == (*song_list)->getData()->end()); ++song){
+            delete (*song)->getData();
+        }
+    }
     this->songChart.clear();
 }
 
 /**      PUSH       **/
 void* StreamingChartNodeZero::pushSong(int artistID, int songID) {
-    List<Song*>* temp_list = *(this->songChart.find(artistID));
-    if(temp_list == nullptr) {
-        this->pushArtist(artistID);
-        temp_list = *(this->songChart.find(artistID));
-    }
-    this->increaseNumOfSongs();
-    auto new_song = new Song(artistID, songID);
-    return temp_list->pushLast(new_song);
-}
+//    List<Song*>* temp_list = *(this->songChart.find(artistID));
+//    if(temp_list == nullptr) {
+//        this->pushArtist(artistID);
+//        temp_list = *(this->songChart.find(artistID));
+//    }
+//    this->increaseNumOfSongs();
+//    auto new_song = new Song(artistID, songID);
+//    return temp_list->pushLast(new_song);
+}//TODO:delete if not nessecery
 
-void StreamingChartNodeZero::pushArtist(int artistID) {
-    auto new_list = new List<Song*>();
-    this->songChart.insert(artistID, new_list);
-}
+void StreamingChartNodeZero::pushArtist(int artistID) {}
+//TODO:delete if not nessecery
 
 /**      POP       **/
 void StreamingChartNodeZero::popArtist(int artistID) {
