@@ -8,11 +8,12 @@
 
 Artist::Artist(int artist_ID, int num_of_songs): artist_id(artist_ID),
                                                 num_of_songs(num_of_songs) {
-    this->songs = new void*[num_of_songs];
+    this->streams = new int[num_of_songs]();
 }
 
 Artist::~Artist() {
     delete this->songs;
+    delete this->streams;
 }
 
 int Artist::getArtistID() {
@@ -25,4 +26,16 @@ void * Artist::getSong(int i) {
         return nullptr;
     }
     return songs[i];
+}
+
+void Artist::setSongs(void **ptrArray) {
+    this->songs = ptrArray;
+}
+
+int Artist::getStreamsOfSong(int i) {
+    return streams[i];
+}
+
+int Artist::getNumberOfSongs() {
+    return this->num_of_songs;
 }

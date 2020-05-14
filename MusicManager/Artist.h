@@ -17,7 +17,10 @@ public:
     Artist(int artist_ID, int num_of_songs);
     ~Artist();
     int getArtistID();
+    int getNumberOfSongs();
+    int getStreamsOfSong(int i);
     void * getSong(int i);
+    void setSongs(void** ptrArray);
 };
 
 

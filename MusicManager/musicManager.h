@@ -22,6 +22,8 @@ public:
     int getNumberOfSongs() const;
     streamingChart* getMusicChart();
     AVLTree<ArtistID, Artist*>* getArtistTree();
+    void addArtist(int artistID, int numOfSongs);
+    void removeArtist(int artistID);
 
 };
 

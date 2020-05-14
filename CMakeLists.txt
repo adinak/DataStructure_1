@@ -29,4 +29,7 @@ add_executable(Wet1
                 ${LIST}/test_LinkedList.h #debug
                 ${CHART}/Test_StreamingChart.h #debug
                 ${MANAGER}/musicManager.h
-                ${MANAGER}/musicManager.cpp)
+                ${MANAGER}/musicManager.cpp
+                library1.h
+                library1.cpp
+                )
