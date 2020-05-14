@@ -23,9 +23,8 @@ private:
                                   List<Song*> *src, int size);
 public:
     streamingChart();
-    ~streamingChart() = default;
+    ~streamingChart() = default; //todo: do we need this?
 
-    int getNumberOfStreams(DataChart chartNode) const;
     void getBestSongs(int* artists, int* songs, int amountOfSongs);
 
     ChartNode pushStreamsLast(int numOfStreams);
@@ -38,7 +37,6 @@ public:
                     int numOfStreams);
 
     friend std::ostream& operator<<(std::ostream& os, streamingChart& list);
-
 };
 
 #endif //WET1_STREAMINGCHART_H
