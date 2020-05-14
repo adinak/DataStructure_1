@@ -6,10 +6,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(LIST ./LinkedList)
 set(CHART ./StreamingChart)
 set(TREE ./AVLTree)
+set(MANAGER ./MusicManager)
 
 include_directories(${LIST})
 include_directories(${CHART})
 include_directories(${TREE})
+include_directories(${MANAGER})
 
 add_executable(Wet1
                 main.cpp
@@ -22,7 +24,9 @@ add_executable(Wet1
                 ${CHART}/Song.h
                 ${CHART}/Song.cpp
                 ${TREE}/AVLTree.h
-                Artist.h
-                Artist.cpp
-                ${LIST}/test_LinkedList.h
-                ${CHART}/Test_StreamingChart.h)
+                ${MANAGER}/Artist.h
+                ${MANAGER}/Artist.cpp
+                ${LIST}/test_LinkedList.h #debug
+                ${CHART}/Test_StreamingChart.h #debug
+                ${MANAGER}/musicManager.h
+                ${MANAGER}/musicManager.cpp)
