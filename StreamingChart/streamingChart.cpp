@@ -23,10 +23,6 @@ void streamingChart::convertLinkedListToArray(int *artist, int *songs,
 streamingChart::streamingChart() : List<DataChart>() { }
 
 /**      GET       **/
-int streamingChart::getNumberOfStreams(StreamingChartNode *chartNode) const {
-    return chartNode->getNumberOfStreams();
-}
-
 void streamingChart::getBestSongs(int *artists, int *songs, int amountOfSongs) {
     int n = amountOfSongs;
 
