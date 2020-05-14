@@ -67,8 +67,9 @@ private:
     /*Iterate over the tree nodes in in-order and using doSomthing function on
      *the nodes data
      */
-    template<typename Function>
-    AVLTreeResult iterateAndDoInOrder(TreeNode<K, D> *node, Function doSomething, int &n);
+    template<typename Function, typename S>
+    AVLTreeResult iterateAndDoInOrder(TreeNode<K, D> *node, Function
+        doSomething, List<S>* lst ,int &n);
 
 
     //TODO:delete when done testing
@@ -136,8 +137,8 @@ public:
      * @param number of nodes/ actions to made
      * @return AVL_SUCCESS
      */
-    template<typename Function>
-    AVLTreeResult doSomethingInOrder(Function doSomething, int &n);
+    template<typename Function, typename S>
+    AVLTreeResult doSomethingInOrder(Function doSomething, int &n, List<S>*lst);
 
     /**
      * Delete all the nodes from the tree and set Private variable to nullptr
@@ -664,19 +665,21 @@ void AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
 }
 
 template<class K, class D>
-template<typename Function>
-AVLTreeResult AVLTree<K, D>::iterateAndDoInOrder(TreeNode<K, D> *node, Function doSomething, int &n) {
+template<typename Function, typename S>
+AVLTreeResult AVLTree<K, D>::iterateAndDoInOrder(TreeNode<K, D> *node,
+        Function doSomething, List<S>* lst, int &n) {
     if(node == nullptr || n == 0) return AVL_SUCCESS;
-    iterateAndDoInOrder(node->getLeft(), doSomething, n);
+    iterateAndDoInOrder(node->getLeft(), doSomething, lst, n);
     if(n == 0) return AVL_SUCCESS;
-    doSomething(node->getData(), n);
-    iterateAndDoInOrder(node->getRight(), doSomething, n);
+    doSomething(node->getData(), n, lst);
+    iterateAndDoInOrder(node->getRight(), doSomething, lst, n);
 }
 
 template<class K, class D>
-template<typename Function>
-AVLTreeResult AVLTree<K, D>::doSomethingInOrder(Function doSomething, int &n) {
-    return iterateAndDoInOrder(this->root, doSomething, n);
+template<typename Function, typename S>
+AVLTreeResult AVLTree<K, D>::doSomethingInOrder(Function doSomething, int &n,
+ List<S>* lst ) {
+    return iterateAndDoInOrder(this->root, doSomething, lst, n);
 }
 
 

@@ -7,16 +7,15 @@
 
 
 /**================================ PRIVATE =================================**/
-void streamingChart::convertLinkedListToArray(int *array, List<Song*> *list,
-                                              int size, int start) {
-    for(List<Song*>::Iterator i = list->beginFront(); !(i == list->end()); ++i){
+void streamingChart::convertLinkedListToArray(int *artist, int *songs,
+                    List<Song*> *src, int size) {
+    int j = 0;
+    for(List<Song*>::Iterator i = src->beginFront();
+        !(i == src->end()) && (size > 0); ++i, j++) {
         size--;
-        if(size == 0) {
-            break;
-        }
-
+        artist[j] = (*i)->getData()->getArtistID();
+        songs[j] = (*i)->getData()->getSongID();
     }
-
 }
 
 /**================================ PUBLIC =================================**/
@@ -29,27 +28,42 @@ int streamingChart::getNumberOfStreams(StreamingChartNode *chartNode) const {
 }
 
 void streamingChart::getBestSongs(int *artists, int *songs, int amountOfSongs) {
-    for(List<DataChart>::Iterator itr = this->beginBack();
-        !(itr == this->end()); --itr) {
-        int delta = -1;
-        if((*itr)->getData()->getNumberOfStreams() == 0) {
-            //put list size of amountOfSongs into array
-        } else {
-            auto* chart_node = dynamic_cast<DataTree>((*itr)->getData());
-            if(amountOfSongs <= chart_node->getNumberOfSongs()) {
-                //generate list from tree
-                //put list size of amountOfSongs into array
-                break;
-            } else {
-                delta = (chart_node->getNumberOfSongs() - amountOfSongs);
-                //generate list from tree
-                //put list size of chart_node->getNumberOfSongs() into array
-                amountOfSongs = delta;
+    int n = amountOfSongs;
+
+    class DoSomething {
+    private:
+    public:
+        DoSomething() = default;
+        ~DoSomething() = default;
+
+        void operator()(AVLTree<int, Song*>* tree, int &n, List<Song*>* list) {
+            tree->getTreeToList(IN, list, n);
+        }
+        void operator()(List<Song*>* src, int &n, List<Song*>* dst) {
+            for(List<Song*>::Iterator i = src->beginFront();
+            !(i == src->end()) && (n > 0); ++i) {
+                dst->pushLast((*i)->getData());
+                n--;
             }
         }
-    }
-    //todo: make a function that transfers a list into an array
+    };
+    DoSomething function;
+    List<Song*> list_dst;
 
+    for(List<DataChart>::Iterator itr = this->beginBack();
+        !(itr == this->end()) && (n > 0); --itr) {
+
+        if((*itr)->getData()->getNumberOfStreams() == 0) {
+            auto* chart_node = dynamic_cast<DataZero>((*itr)->getData());
+            chart_node->getArtistTree()->doSomethingInOrder(function, n,
+                                                            &list_dst);
+        } else {
+            auto* chart_node = dynamic_cast<DataTree>((*itr)->getData());
+            chart_node->getArtistTree()->doSomethingInOrder(function, n,
+                    &list_dst);
+        }
+    }
+    this->convertLinkedListToArray(artists, songs, &list_dst, amountOfSongs);
 }
 
 /**      PUSH       **/

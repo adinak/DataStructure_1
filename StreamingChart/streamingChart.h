@@ -19,8 +19,8 @@ typedef StreamingChartNodeTree* DataTree;
 
 class streamingChart : public List<DataChart>{
 private:
-    void convertLinkedListToArray(int *array, List<Song*>* list, int size,
-            int start);
+    void convertLinkedListToArray(int *artist, int *songs,
+                                  List<Song*> *src, int size);
 public:
     streamingChart();
     ~streamingChart() = default;

@@ -29,11 +29,25 @@ protected:
     ListResult findNode(ListNode<T>* node);
 
 public:
-    List();
+    /**
+     * Creates new empty Bi-Directional list, containing items of type <T>
+     */
+    List<T>();
+
+    /**
+     * Destroys given List<T>
+     */
     ~List();
 
+    /**
+     * checks length of list
+     * @return true if list length == 0, false otherwise
+     */
     bool isEmpty() const;
 
+    /**
+     * @return list node data
+     */
     T getHeadData() const;
     T getTailData() const;
     int getLength() const;
