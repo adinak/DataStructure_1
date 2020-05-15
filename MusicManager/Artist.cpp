@@ -12,6 +12,7 @@ Artist::Artist(int artist_ID, int num_of_songs): artist_id(artist_ID),
     for(int i = 0; i<num_of_songs; i++){
         streams[i] = 0;
     }
+    this->songs = nullptr;
 }
 
 Artist::~Artist() {

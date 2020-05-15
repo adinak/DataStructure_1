@@ -9,7 +9,7 @@
 //using std::list;
 
 #include "TreeNode.h"
-#include "../LinkedList/list.h"
+#include "list.h"
 
 
 typedef enum {AVL_SUCCESS, AVL_KEY_ALREADY_EXISTS, AVL_KEY_NOT_EXISTS,

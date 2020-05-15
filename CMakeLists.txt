@@ -14,7 +14,7 @@ include_directories(${TREE})
 include_directories(${MANAGER})
 
 add_executable(Wet1
-                main.cpp
+                #main1.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h
                 ${CHART}/streamingChart.h
@@ -26,10 +26,10 @@ add_executable(Wet1
                 ${TREE}/AVLTree.h
                 ${MANAGER}/Artist.h
                 ${MANAGER}/Artist.cpp
-                ${LIST}/test_LinkedList.h #debug
-                ${CHART}/Test_StreamingChart.h #debug
+                #${LIST}/test_LinkedList.h #debug
+                #${CHART}/Test_StreamingChart.h #debug
+                test_main.cpp #debug
                 ${MANAGER}/musicManager.h
                 ${MANAGER}/musicManager.cpp
                 library1.h
-                library1.cpp
-                test_main.cpp ) #debug
+                library1.cpp)

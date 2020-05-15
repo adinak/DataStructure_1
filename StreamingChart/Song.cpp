@@ -3,7 +3,6 @@
 //
 
 #include "Song.h"
-#include "streamingChart.h"
 
 Song::Song(int artistID, int songID) : artist_id(artistID), song_id(songID) {}
 

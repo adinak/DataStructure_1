@@ -75,11 +75,11 @@ void MusicManager::addToSongCount(int artistID, int songID) {
     if(streams == 0) {
         auto* song = static_cast<ListNode<struct Song *> *>(artist->getSong(songID));
         new_ptr = chart->addToSongInZero(song, artistID, songID, streams+1);
-        artist->setPtrToSong(artistID, new_ptr);
+        artist->setPtrToSong(songID, new_ptr);
     } else {
         auto chart_node = static_cast<ChartNode>(artist->getSong(songID));
         new_ptr = chart->addToSong(chart_node, artistID, songID, streams+1);
-        artist->setPtrToSong(artistID, new_ptr);
+        artist->setPtrToSong(songID, new_ptr);
     }
     artist->setSongStream(songID);
 }

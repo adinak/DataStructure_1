@@ -22,9 +22,14 @@ int main() {
     } else {
         cout << "FAIL!" << endl;
     }
+    if(AddToSongCount(music_manager, 123, 4) == SUCCESS) {
+        cout << "Added to song count" << endl;
+    } else {
+        cout << "FAIL!" << endl;
+    }
     int streams;
     if(NumberOfStreams(music_manager, 123, 4, &streams) == SUCCESS &&
-            streams == 1) {
+            streams == 2) {
         cout << "Number of Streams is Correct" << endl;
     } else {
         cout << "FAIL!" << endl;
