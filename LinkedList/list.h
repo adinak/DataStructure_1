@@ -91,17 +91,36 @@ public:
     ListNode<T>* pushLast(T data);
 
     /**
-     * Inserts a new node after a chosen node
+     * Creates and inserts a new node after a chosen node
      * @param afterNode - the node in the list in which the new node will be
      * inserted after
-     * @param newNode - the new node added to the list
+     * @param newData - the new node created with the provided data
      * @return - the new node added
      */
     ListNode<T>* pushNode(ListNode<T>* afterNode, T newData);
 
+    /**
+     * Removes a specific node from the list
+     * @param node - the requested node that's removed
+     * @return Success if the node was found and delete, Fail otherwise
+     */
     ListResult popNode(ListNode<T>* node);
+
+    /**
+     * Removes the first node in the list
+     * @return the deleted node's data
+     */
     T popFirst();
+
+    /**
+     * Removes the last node in the list
+     * @return the deleted node's data
+     */
     T popLast();
+
+    /**
+     * Removes all the nodes from the list
+     */
     void clearList();
 
     class Iterator{
