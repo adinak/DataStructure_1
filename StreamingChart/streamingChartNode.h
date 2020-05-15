@@ -52,12 +52,12 @@ public:
 
 class StreamingChartNodeTree : public StreamingChartNode{
 private:
-    AVLTree<int, AVLTree<int, Song*>> songChart;
+    AVLTree<int, AVLTree<int, Song*>*> songChart;
 public:
     StreamingChartNodeTree(int numOfStreams);
     ~StreamingChartNodeTree() override;
 
-    AVLTree<int, AVLTree<int, Song*>>* getArtistTree();
+    AVLTree<int, AVLTree<int, Song*>*>* getArtistTree();
 
     void* pushSong(int artistID, int songID) override;
     void pushArtist(int artistID) override;

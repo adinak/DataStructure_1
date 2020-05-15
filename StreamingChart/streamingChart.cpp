@@ -20,7 +20,15 @@ void streamingChart::convertLinkedListToArray(int *artist, int *songs,
 
 /**================================ PUBLIC =================================**/
 /**      C'TOR       **/
-streamingChart::streamingChart() : List<DataChart>() { }
+streamingChart::streamingChart() : List<DataChart>() {}
+
+/**      D'TOR       **/
+streamingChart::~streamingChart() {
+    for(Iterator i = this->beginFront();!(i == this->end());++i){
+        DataChart d = (*i)->getData();
+        delete d;
+    }
+}
 
 /**      GET       **/
 void streamingChart::getBestSongs(int *artists, int *songs, int amountOfSongs) {
@@ -104,6 +112,9 @@ void*
 streamingChart::addToSongInZero(ListNode<Song *>* song, int artistID,
                                 int songID, int numOfStreams) {
     auto* chart_zero = dynamic_cast<DataZero>(this->getHeadData());
+    if(chart_zero == nullptr) {
+        return nullptr;
+    }
     chart_zero->popSong(artistID, song);
     ChartNode next_node = this->getHead()->getNext();
     if(next_node == nullptr) {
@@ -143,6 +154,8 @@ std::ostream &operator<<(ostream &os, streamingChart &list) {
     }
     return os;
 }
+
+
 
 
 

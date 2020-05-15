@@ -23,7 +23,7 @@ private:
                                   List<Song*> *src, int size);
 public:
     streamingChart();
-    ~streamingChart() = default; //todo: do we need this?
+    ~streamingChart();
 
     void getBestSongs(int* artists, int* songs, int amountOfSongs);
 

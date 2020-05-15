@@ -17,7 +17,7 @@ private:
     AVLTree<ArtistID, Artist*> artistTree;
 public:
     MusicManager();
-    ~MusicManager() = default;
+    ~MusicManager();
 
     int getNumberOfSongs() const;
     streamingChart* getMusicChart();
