@@ -14,7 +14,7 @@ include_directories(${TREE})
 include_directories(${MANAGER})
 
 add_executable(Wet1
-                #main1.cpp
+                main.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h
                 ${CHART}/streamingChart.h

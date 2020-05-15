@@ -13,6 +13,8 @@ private:
     int num_of_songs;
     int* streams;
     void** songs;
+
+
 public:
     Artist(int artist_ID, int num_of_songs);
     ~Artist();

@@ -8,12 +8,15 @@
 
 Artist::Artist(int artist_ID, int num_of_songs): artist_id(artist_ID),
                                                 num_of_songs(num_of_songs) {
-    this->streams = new int[num_of_songs]();
+    this->streams = new int[num_of_songs];
+    for(int i = 0; i<num_of_songs; i++){
+        streams[i] = 0;
+    }
 }
 
 Artist::~Artist() {
-    delete this->songs;
-    delete this->streams;
+    delete[] this->songs;
+    delete[] this->streams;
 }
 
 int Artist::getArtistID() {
