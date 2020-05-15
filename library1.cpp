@@ -81,7 +81,8 @@ GetRecommendedSongs(void *DS, int numOfSongs, int *artists, int *songs) {
 }
 
 void Quit(void **DS) {
-
+    auto* music_manager = (MusicManager*)DS;
+    delete music_manager;
 }
 
 
