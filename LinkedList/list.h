@@ -40,23 +40,64 @@ public:
     ~List();
 
     /**
-     * checks length of list
+     * Checks length of list
      * @return true if list length == 0, false otherwise
      */
     bool isEmpty() const;
 
     /**
-     * @return list node data
+     * Retrieves data of type T from the first node
+     * @return data
      */
     T getHeadData() const;
+
+    /**
+     * Retrieves data of type T from the last node
+     * @return data
+     */
     T getTailData() const;
+
+    /**
+     * @return size of list
+     */
     int getLength() const;
+
+    /**
+     * If list is empty returns nullptr
+     * @return the first node in the list
+     */
     ListNode<T>* getHead() const;
+
+    /**
+     * If list is empty returns nullptr
+     * @return the last node in the list
+     */
     ListNode<T>* getTail() const;
 
+    /**
+     * Creates a new node with the data provided and links it at the
+     * beginning of the list
+     * @param data
+     * @return the new node that was created
+     */
     ListNode<T>* pushFirst(T data);
+
+    /**
+     * Creates a new node with the data provided and links it at the
+     * end of the list
+     * @param data
+     * @return the new node that was created
+     */
     ListNode<T>* pushLast(T data);
-    ListNode<T>* pushNode(ListNode<T>* afterNode, ListNode<T>* newNode);
+
+    /**
+     * Inserts a new node after a chosen node
+     * @param afterNode - the node in the list in which the new node will be
+     * inserted after
+     * @param newNode - the new node added to the list
+     * @return - the new node added
+     */
+    ListNode<T>* pushNode(ListNode<T>* afterNode, T newData);
 
     ListResult popNode(ListNode<T>* node);
     T popFirst();
@@ -159,7 +200,8 @@ ListNode<T>* List<T>::pushLast(T data) {
 }
 
 template<typename T>
-ListNode<T> *List<T>::pushNode(ListNode<T>* afterNode, ListNode<T>* newNode) {
+ListNode<T> *List<T>::pushNode(ListNode<T>* afterNode, T newData) {
+    auto* newNode = new ListNode<T>(newData);
     newNode->attachNode(afterNode, afterNode->getNext());
     return newNode;
 }

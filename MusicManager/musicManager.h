@@ -20,7 +20,7 @@ private:
 
 public:
     MusicManager();
-    ~MusicManager();
+    ~MusicManager() = default;
 
     int getNumberOfSongs() const;
     streamingChart* getMusicChart();

@@ -81,11 +81,10 @@ ChartNode streamingChart::pushStreamsLast(int numOfStreams) {
     }
 }
 
-ChartNode streamingChart::pushStreamsNode(int numOfStreams, //todo
+ChartNode streamingChart::pushStreamsNode(int numOfStreams,
         ChartNode afterNode) {
     auto* newChartNode = new StreamingChartNodeTree(numOfStreams);
-    return this->pushNode(afterNode,
-            reinterpret_cast<ListNode<struct StreamingChartNode *> *>(newChartNode));
+    return this->pushNode(afterNode, newChartNode);
 }
 
 void** streamingChart::pushNewArtist(int artistID, int numOfSongs) {

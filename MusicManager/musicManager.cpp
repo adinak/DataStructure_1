@@ -9,7 +9,7 @@ MusicManager::MusicManager() : numberOfSongs(0) {
     this->artistTree = AVLTree<ArtistID, Artist*>();
 }
 
-MusicManager::~MusicManager() {
+/*MusicManager::~MusicManager() {
     List<Artist*> list_to_delete;
     this->artistTree.getTreeToList(IN,&list_to_delete);
     List<Artist*>::Iterator i = list_to_delete.beginFront();
@@ -17,7 +17,7 @@ MusicManager::~MusicManager() {
         Artist* d = (*i)->getData();
         delete d;
     }
-}
+}*/
 
 int MusicManager::getNumberOfSongs() const {
     return this->numberOfSongs;
