@@ -31,9 +31,63 @@ StatusType RemoveArtist(void *DS, int artistID) {
     if(artist == nullptr) {
         return FAILURE;
     }
-
+    music_manager->removeArtist(artistID);
     return SUCCESS;
 }
+
+StatusType AddToSongCount(void *DS, int artistID, int songID) {
+    if(DS == nullptr || artistID <= 0 || songID < 0) {
+        return INVALID_INPUT;
+    }
+    auto* music_manager = (MusicManager*)DS;
+    Artist* artist = *(music_manager->getArtistTree()->find(artistID));
+    if(artist == nullptr) {
+        return FAILURE;
+    }
+    if(songID >= artist->getNumberOfSongs()) {
+        return INVALID_INPUT;
+    }
+    music_manager->addToSongCount(artistID, songID);
+    return SUCCESS;
+}
+
+StatusType NumberOfStreams(void *DS, int artistID, int songID, int *streams) {
+    if(DS == nullptr || songID < 0 || artistID <= 0) {
+        return INVALID_INPUT;
+    }
+    auto* music_manager = (MusicManager*)DS;
+    Artist* artist = *(music_manager->getArtistTree()->find(artistID));
+    if(artist == nullptr) {
+        return FAILURE;
+    }
+    if(songID >= artist->getNumberOfSongs()) {
+        return INVALID_INPUT;
+    }
+    *streams = artist->getStreamsOfSong(songID);
+    return SUCCESS;
+}
+
+StatusType
+GetRecommendedSongs(void *DS, int numOfSongs, int *artists, int *songs) {
+    if(DS == nullptr || numOfSongs <= 0) {
+        return INVALID_INPUT;
+    }
+    auto* music_manager = (MusicManager*)DS;
+    if(numOfSongs > music_manager->getNumberOfSongs()) {
+        return FAILURE;
+    }
+    music_manager->getMusicChart()->getBestSongs(artists, songs, numOfSongs);
+    return SUCCESS;
+}
+
+void Quit(void **DS) {
+
+}
+
+
+
+
+
 
 
 

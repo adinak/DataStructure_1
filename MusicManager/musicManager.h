@@ -15,6 +15,9 @@ private:
     int numberOfSongs;
     streamingChart musicChart;
     AVLTree<ArtistID, Artist*> artistTree;
+
+    void updateNumberOfSongs(int num);
+
 public:
     MusicManager();
     ~MusicManager();
@@ -22,8 +25,10 @@ public:
     int getNumberOfSongs() const;
     streamingChart* getMusicChart();
     AVLTree<ArtistID, Artist*>* getArtistTree();
+
     void addArtist(int artistID, int numOfSongs);
     void removeArtist(int artistID);
+    void addToSongCount(int artistID, int songID);
 
 };
 

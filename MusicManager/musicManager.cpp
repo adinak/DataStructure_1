@@ -36,21 +36,48 @@ void MusicManager::addArtist(int artistID, int numOfSongs) {
     auto* new_artist = new Artist(artistID, numOfSongs);
     new_artist->setSongs(ptr_array);
     this->getArtistTree()->insert(artistID, new_artist);
+    this->updateNumberOfSongs(numOfSongs);
 }
 
 void MusicManager::removeArtist(int artistID) {
-    AVLTree<ArtistID, Artist*>* tree = this->getArtistTree();
-    Artist* artist = *(tree->find(artistID));
+    Artist* artist = *(this->getArtistTree()->find(artistID));
     int streams;
-    void* song_ptr;
-    for (int i = 0; i < artist->getNumberOfSongs(); ++i) {
+    DataZero zero;
+    List<Song*>* ptr_list;
+    DataTree ptr_node_tree;
+    ListNode<Song*>* ptr_song_zero;
+    int n = artist->getNumberOfSongs();
+
+    for (int i = 0; i < n; ++i) {
         streams = artist->getStreamsOfSong(i);
         if(streams == 0) {
-
+            ptr_song_zero = static_cast<ListNode<struct Song *> *>(artist->getSong(i));
+            zero = dynamic_cast<DataZero>(this->getMusicChart()->getHeadData());
+            ptr_list = *(zero->getArtistTree()->find(artistID));
+            ptr_list->popNode(ptr_song_zero);
         } else {
-
+            ptr_node_tree = static_cast<DataTree>(artist->getSong(i));
+            ptr_node_tree->popSong(artistID, i);
         }
     }
+    this->updateNumberOfSongs(-n);
+}
+
+void MusicManager::addToSongCount(int artistID, int songID) {
+    Artist* artist = *(this->getArtistTree()->find(artistID));
+    int streams = artist->getStreamsOfSong(songID);
+    streamingChart* chart = this->getMusicChart();
+    if(streams == 0) {
+        auto* song = static_cast<ListNode<struct Song *> *>(artist->getSong(songID));
+        chart->addToSongInZero(song, artistID, songID, streams+1);
+    } else {
+        auto chart_node = static_cast<ChartNode>(artist->getSong(songID));
+        chart->addToSong(chart_node, artistID, songID, streams+1);
+    }
+}
+
+void MusicManager::updateNumberOfSongs(int num) {
+    this->numberOfSongs += num;
 }
 
 
