@@ -142,10 +142,15 @@ void StreamingChartNodeTree::pushArtist(int artistID) {
 /**      POP       **/
 void StreamingChartNodeTree::popSong(int artistID, int songID) {
     AVLTree<int, Song*>** temp_tree = this->songChart.find(artistID);
+    Song* dead;
     if(temp_tree != nullptr) {
+        dead = *((*temp_tree)->find(songID));
         (*temp_tree)->remove(songID);
         if ((*temp_tree)->getSize() == 0) {
             this->popArtist(artistID);
+        }
+        if(dead != nullptr){
+            delete dead;
         }
         this->decreaseNumOfSongs();
     }

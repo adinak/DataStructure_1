@@ -20,7 +20,7 @@ private:
 
 public:
     MusicManager();
-    ~MusicManager() = default;
+    ~MusicManager();
 
     /**
      * @return total number of songs in music manager

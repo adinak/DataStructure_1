@@ -7,7 +7,7 @@
 
 void *Init() {
     MusicManager* new_manager = new MusicManager();
-    return new_manager;
+    return (void*)new_manager;
 }
 
 StatusType AddArtist(void *DS, int artistID, int numOfSongs) {
@@ -84,7 +84,7 @@ GetRecommendedSongs(void *DS, int numOfSongs, int *artists, int *songs) {
 }
 
 void Quit(void **DS) {
-    auto* music_manager = (MusicManager*)DS;
+    MusicManager* music_manager = (MusicManager*)*DS;
     delete music_manager;
 }
 
