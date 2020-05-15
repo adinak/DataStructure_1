@@ -20,22 +20,30 @@ int Artist::getArtistID() {
     return this->artist_id;
 }
 
-void * Artist::getSong(int i) {
-    if(i>=num_of_songs||i<0){
+void * Artist::getSong(int songID) {
+    if(songID >= num_of_songs || songID < 0){
         std::cerr<<"invalid song index"<<std::endl;
         return nullptr;
     }
-    return songs[i];
+    return songs[songID];
 }
 
 void Artist::setSongs(void **ptrArray) {
     this->songs = ptrArray;
 }
 
-int Artist::getStreamsOfSong(int i) {
-    return streams[i];
+int Artist::getStreamsOfSong(int songID) {
+    return streams[songID];
 }
 
 int Artist::getNumberOfSongs() {
     return this->num_of_songs;
+}
+
+void Artist::setPtrToSong(int songID, void* ptr) {
+    songs[songID] = ptr;
+}
+
+void Artist::setSongStream(int songID) {
+    streams[songID]++;
 }

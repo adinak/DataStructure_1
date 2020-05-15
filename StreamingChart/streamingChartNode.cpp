@@ -118,16 +118,17 @@ StreamingChartNodeTree::~StreamingChartNodeTree() {
 
 /**      PUSH       **/
 void* StreamingChartNodeTree::pushSong(int artistID, int songID) {
-    AVLTree<int, Song*>** temp_tree = this->songChart.find(artistID);
-    if(temp_tree != nullptr) {
-        if ((*temp_tree) == nullptr) {
-            this->pushArtist(artistID);
-            temp_tree = this->songChart.find(artistID);
-        }
-        auto new_song = new Song(artistID, songID);
-        (*temp_tree)->insert(songID, new_song);
-        this->increaseNumOfSongs();
+    if(this->numberOfSongs == 0) {
+        this->pushArtist(artistID);
     }
+    AVLTree<int, Song*>* temp_tree = *(this->songChart.find(artistID));
+    if (temp_tree == nullptr) {
+        this->pushArtist(artistID);
+        temp_tree = *(this->songChart.find(artistID));
+    }
+    auto new_song = new Song(artistID, songID);
+    temp_tree->insert(songID, new_song);
+    this->increaseNumOfSongs();
 
     void* ptr = this;
     return ptr;

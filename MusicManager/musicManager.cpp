@@ -67,13 +67,17 @@ void MusicManager::addToSongCount(int artistID, int songID) {
     Artist* artist = *(this->getArtistTree()->find(artistID));
     int streams = artist->getStreamsOfSong(songID);
     streamingChart* chart = this->getMusicChart();
+    void* new_ptr;
     if(streams == 0) {
         auto* song = static_cast<ListNode<struct Song *> *>(artist->getSong(songID));
-        chart->addToSongInZero(song, artistID, songID, streams+1);
+        new_ptr = chart->addToSongInZero(song, artistID, songID, streams+1);
+        artist->setPtrToSong(artistID, new_ptr);
     } else {
         auto chart_node = static_cast<ChartNode>(artist->getSong(songID));
-        chart->addToSong(chart_node, artistID, songID, streams+1);
+        new_ptr = chart->addToSong(chart_node, artistID, songID, streams+1);
+        artist->setPtrToSong(artistID, new_ptr);
     }
+    artist->setSongStream(songID);
 }
 
 void MusicManager::updateNumberOfSongs(int num) {
