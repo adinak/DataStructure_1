@@ -7,8 +7,8 @@
 
 
 /**================================ PRIVATE =================================**/
-void streamingChart::convertLinkedListToArray(int *artist, int *songs,
-                    List<Song*> *src, int size) {
+void streamingChart::convertListToArray(int *artist, int *songs,
+                                        List<Song*> *src, int size) {
     int j = 0;
     for(List<Song*>::Iterator i = src->beginFront();
         !(i == src->end()) && (size > 0); ++i, j++) {
@@ -67,7 +67,7 @@ void streamingChart::getBestSongs(int *artists, int *songs, int amountOfSongs) {
                     &list_dst);
         }
     }
-    this->convertLinkedListToArray(artists, songs, &list_dst, amountOfSongs);
+    this->convertListToArray(artists, songs, &list_dst, amountOfSongs);
 }
 
 /**      PUSH       **/

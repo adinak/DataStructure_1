@@ -20,16 +20,41 @@ private:
 
 public:
     ListNode() = default;
-    explicit ListNode(T data);
+
+    /**
+     * Creates a new list node with data
+     * @param data
+     */
+    ListNode(T data);
     ~ListNode() = default;
 
+    /**
+     * @return the next node in the list, after current
+     */
     ListNode* getNext() const;
-    ListNode* getPrev() const;
-    T getData() const;
-    void attachNode(ListNode* prev ,ListNode* next);
-    void removeNode();
 
-    friend class TestListNode; //TODO: debug
+    /**
+     * @return the previous node in the list, before current
+     */
+    ListNode* getPrev() const;
+
+    /**
+     * @return the data of current node
+     */
+    T getData() const;
+
+    /**
+     * Insert current node between prev and next
+     * @param prev
+     * @param next
+     */
+    void attachNode(ListNode* prev ,ListNode* next);
+
+    /**
+     * Remove node from current position
+     * Attach the nodes before and after current
+     */
+    void removeNode();
 };
 
 /**===========================================================================

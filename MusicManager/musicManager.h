@@ -22,14 +22,44 @@ public:
     MusicManager();
     ~MusicManager() = default;
 
+    /**
+     * @return total number of songs in music manager
+     */
     int getNumberOfSongs() const;
+
+    /**
+     * @return pointer to streaming chart list
+     */
     streamingChart* getMusicChart();
+
+    /**
+     * @return pointer to artist tree
+     */
     AVLTree<ArtistID, Artist*>* getArtistTree();
 
+    /**
+     * Adds a new artist to the artists tree and adds all the artist songs to
+     * the streaming chart
+     * @param artistID
+     * @param numOfSongs
+     */
     void addArtist(int artistID, int numOfSongs);
-    void removeArtist(int artistID);
-    void addToSongCount(int artistID, int songID);
 
+    /**
+     * Deletes artist from artists tree and deletes all of the artist songs
+     * from the streaming chart
+     * @param artistID
+     */
+    void removeArtist(int artistID);
+
+    /**
+     * Increases songID streams by:
+     * - increasing number of streams in streams[songID]
+     * - moving the song from current node in music chart to next node
+     * @param artistID
+     * @param songID
+     */
+    void addToSongCount(int artistID, int songID);
 };
 
 

@@ -145,8 +145,6 @@ public:
 
     template<typename R>
     friend std::ostream& operator<<(std::ostream& os, const List<R>& list);
-
-    friend class TestListNode; //TODO: debug
 };
 
 /**===========================================================================

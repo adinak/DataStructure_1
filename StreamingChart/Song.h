@@ -13,7 +13,15 @@ private:
 public:
     Song(int artistID, int songID);
     ~Song() = default;
+
+    /**
+     * @return artist_id
+     */
     int getArtistID();
+
+    /**
+     * @return song_id
+     */
     int getSongID();
 };
 
