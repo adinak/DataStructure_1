@@ -4,10 +4,17 @@
 
 #include "library1.h"
 #include "musicManager.h"
+using std::bad_alloc;
 
 void *Init() {
-    MusicManager* new_manager = new MusicManager();
-    return (void*)new_manager;
+    MusicManager *new_manager;
+    try {
+        new_manager = new MusicManager();
+    }
+    catch (...) {
+        new_manager = nullptr;
+    }
+    return (void *) new_manager;
 }
 
 StatusType AddArtist(void *DS, int artistID, int numOfSongs) {
@@ -18,7 +25,12 @@ StatusType AddArtist(void *DS, int artistID, int numOfSongs) {
     if(music_manager->getArtistTree()->find(artistID) != nullptr) {
         return FAILURE;
     }
-    music_manager->addArtist(artistID, numOfSongs);
+    try {
+        music_manager->addArtist(artistID, numOfSongs);
+    }
+    catch (bad_alloc &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
@@ -31,7 +43,12 @@ StatusType RemoveArtist(void *DS, int artistID) {
     if(artist == nullptr) {
         return FAILURE;
     }
-    music_manager->removeArtist(artistID);
+    try {
+        music_manager->removeArtist(artistID);
+    }
+    catch (bad_alloc &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
@@ -47,7 +64,12 @@ StatusType AddToSongCount(void *DS, int artistID, int songID) {
     if(songID >= (*artist)->getNumberOfSongs()) {
         return INVALID_INPUT;
     }
-    music_manager->addToSongCount(artistID, songID);
+    try {
+        music_manager->addToSongCount(artistID, songID);
+    }
+    catch (bad_alloc &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
@@ -63,7 +85,12 @@ StatusType NumberOfStreams(void *DS, int artistID, int songID, int *streams) {
     if(songID >= (*artist)->getNumberOfSongs()) {
         return INVALID_INPUT;
     }
-    *streams = (*artist)->getStreamsOfSong(songID);
+    try {
+        *streams = (*artist)->getStreamsOfSong(songID);
+    }
+    catch (bad_alloc &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
@@ -76,7 +103,12 @@ GetRecommendedSongs(void *DS, int numOfSongs, int *artists, int *songs) {
     if(numOfSongs > music_manager->getNumberOfSongs()) {
         return FAILURE;
     }
-    music_manager->getMusicChart()->getBestSongs(artists, songs, numOfSongs);
+    try {
+        music_manager->getMusicChart()->getBestSongs(artists, songs, numOfSongs);
+    }
+    catch (bad_alloc &e) {
+        return ALLOCATION_ERROR;
+    }
     return SUCCESS;
 }
 
