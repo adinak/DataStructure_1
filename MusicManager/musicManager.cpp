@@ -68,16 +68,19 @@ void MusicManager::removeArtist(int artistID) {
 }
 
 void MusicManager::addToSongCount(int artistID, int songID) {
+    //must be artist with artistID in the system
+    //std::cout<<this->getMusicChart()->getHeadData()->getNumberOfStreams()<<std::endl;
     Artist* artist = *(this->getArtistTree()->find(artistID));
     int streams = artist->getStreamsOfSong(songID);
     streamingChart* chart = this->getMusicChart();
     void* new_ptr;
     if(streams == 0) {
-        auto* song = static_cast<ListNode<struct Song *> *>(artist->getSong(songID));
+        auto* song = static_cast<ListNode<Song *> *>(artist->getSong(songID));
         new_ptr = chart->addToSongInZero(song, artistID, songID, streams+1);
         artist->setPtrToSong(songID, new_ptr);
     } else {
-        auto chart_node = static_cast<ChartNode>(artist->getSong(songID));
+        void* tmp = artist->getSong(songID);
+        auto chart_node = static_cast<ChartNode>(tmp);
         new_ptr = chart->addToSong(chart_node, artistID, songID, streams+1);
         artist->setPtrToSong(songID, new_ptr);
     }

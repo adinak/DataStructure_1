@@ -33,12 +33,12 @@ StreamingChartNodeZero::StreamingChartNodeZero(int numOfStreams) {
 StreamingChartNodeZero::~StreamingChartNodeZero() {
     List<List<Song*>*> tmp_list;
     this->getArtistTree()->getTreeToList(IN, &tmp_list);
-    List<Song*> list_to_delete;
     for(List<List<Song*>*>::Iterator song_list = tmp_list.beginFront();
             !(song_list == tmp_list.end()); ++song_list) {
         for(List<Song*>::Iterator song = (*song_list)->getData()->beginFront();
             !(song == (*song_list)->getData()->end()); ++song){
-            delete (*song)->getData();
+            Song* d = (*song)->getData();
+            delete d;
         }
         delete (*song_list)->getData();
     }
@@ -62,13 +62,17 @@ void StreamingChartNodeZero::pushArtist(int artistID) {}
 
 /**      POP       **/
 void StreamingChartNodeZero::popArtist(int artistID) {
+    List<Song*>** artist_list = songChart.find(artistID);
+    delete (*artist_list);
     this->songChart.remove(artistID);
 }
 
 void StreamingChartNodeZero::popSong(int artistID, ListNode<Song*>* songNode) {
     List<Song*>** temp_list = this->songChart.find(artistID);
     if(temp_list != nullptr) {
+        Song* d = songNode->getData();
         (*temp_list)->popNode(songNode);
+        delete d;
         if ((*temp_list)->getLength() == 0) {
             this->popArtist(artistID);
         }
@@ -122,15 +126,14 @@ void* StreamingChartNodeTree::pushSong(int artistID, int songID) {
     if(this->numberOfSongs == 0) {
         this->pushArtist(artistID);
     }
-    AVLTree<int, Song*>* temp_tree = *(this->songChart.find(artistID));
+    AVLTree<int, Song*>** temp_tree = this->songChart.find(artistID);
     if (temp_tree == nullptr) {
         this->pushArtist(artistID);
-        temp_tree = *(this->songChart.find(artistID));
+        temp_tree = this->songChart.find(artistID);
     }
     auto new_song = new Song(artistID, songID);
-    temp_tree->insert(songID, new_song);
+    (*temp_tree)->insert(songID, new_song);
     this->increaseNumOfSongs();
-
     void* ptr = this;
     return ptr;
 }
@@ -158,6 +161,8 @@ void StreamingChartNodeTree::popSong(int artistID, int songID) {
 }
 
 void StreamingChartNodeTree::popArtist(int artistID) {
+    AVLTree<int, Song*>** artist_list = songChart.find(artistID);
+    delete (*artist_list);
     this->songChart.remove(artistID);
 }
 

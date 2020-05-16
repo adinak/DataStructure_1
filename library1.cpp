@@ -40,11 +40,11 @@ StatusType AddToSongCount(void *DS, int artistID, int songID) {
         return INVALID_INPUT;
     }
     auto* music_manager = (MusicManager*)DS;
-    Artist* artist = *(music_manager->getArtistTree()->find(artistID));
+    Artist** artist = (music_manager->getArtistTree()->find(artistID));
     if(artist == nullptr) {
         return FAILURE;
     }
-    if(songID >= artist->getNumberOfSongs()) {
+    if(songID >= (*artist)->getNumberOfSongs()) {
         return INVALID_INPUT;
     }
     music_manager->addToSongCount(artistID, songID);

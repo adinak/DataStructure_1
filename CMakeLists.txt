@@ -3,7 +3,7 @@ project(Wet1)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(GCC_COVERAGE_COMPILE_FLAGS "-DNDEBUG -Wall")
+set(GCC_COVERAGE_COMPILE_FLAGS "-DNDEBUG -Wall -static-libstdc++ -static-libgcc")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 
 set(LIST ./LinkedList)
@@ -18,7 +18,8 @@ include_directories(${MANAGER})
 
 add_executable(Wet1
                 #main.cpp
-                #main1.cpp
+                #test_main.cpp #debug
+                main1.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h
                 ${CHART}/streamingChart.h
@@ -32,7 +33,6 @@ add_executable(Wet1
                 ${MANAGER}/Artist.cpp
                 #${LIST}/test_LinkedList.h #debug
                 #${CHART}/Test_StreamingChart.h #debug
-                test_main.cpp #debug
                 ${MANAGER}/musicManager.h
                 ${MANAGER}/musicManager.cpp
                 library1.h

@@ -220,6 +220,7 @@ template<typename T>
 ListNode<T> *List<T>::pushNode(ListNode<T>* afterNode, T newData) {
     auto* newNode = new ListNode<T>(newData);
     newNode->attachNode(afterNode, afterNode->getNext());
+    this->increaseLength();
     return newNode;
 }
 

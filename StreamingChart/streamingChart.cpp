@@ -138,11 +138,12 @@ streamingChart::addToSong(ChartNode currentChart, int artistID, int songID,
     }
 
     if(data_node->getNumberOfSongs() == 0) {
-        this->popNode(reinterpret_cast<ListNode<DataChart> *>(currentChart)); //todo
+        delete data_node;
+        this->popNode(currentChart);
     }
     data_node = dynamic_cast<DataTree>(next_chart->getData());
-
-    return data_node->pushSong(artistID, songID);
+    data_node->pushSong(artistID, songID);
+    return next_chart;
 }
 
 std::ostream &operator<<(ostream &os, streamingChart &list) {
