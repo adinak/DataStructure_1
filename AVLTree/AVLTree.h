@@ -157,7 +157,7 @@ public:
  */
 
 template<class K, class D>
-AVLTree<K, D>::AVLTree():root(nullptr), biggest_node(nullptr), num_of_nodes(0) {}
+AVLTree<K, D>::AVLTree():num_of_nodes(0),root(nullptr), biggest_node(nullptr){}
 
 template<class K, class D>
 AVLTree<K, D>::~AVLTree() {
@@ -298,7 +298,6 @@ AVLTreeResult AVLTree<K,D>::rotateRL(TreeNode<K, D>* C) {
 template<class K, class D>
 AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
     K key = new_node->getKey();
-    D data = new_node->getData();
     TreeNode<K,D>* curr = this->root;
     bool new_biggest_node = true;
     if(curr == nullptr){
@@ -667,12 +666,13 @@ void AVLTree<K, D>::clearTree(TreeNode<K, D> *root_node) {
 template<class K, class D>
 template<typename Function, typename S>
 AVLTreeResult AVLTree<K, D>::iterateAndDoInOrder(TreeNode<K, D> *node,
-        Function doSomething, List<S>* lst, int &n) {
+                                Function doSomething, List<S>* lst, int &n) {
     if(node == nullptr || n == 0) return AVL_SUCCESS;
     iterateAndDoInOrder(node->getLeft(), doSomething, lst, n);
     if(n == 0) return AVL_SUCCESS;
     doSomething(node->getData(), n, lst);
     iterateAndDoInOrder(node->getRight(), doSomething, lst, n);
+    return AVL_SUCCESS;
 }
 
 template<class K, class D>

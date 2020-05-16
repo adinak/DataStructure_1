@@ -32,22 +32,18 @@ private:
     void setLeft(TreeNode<K,D>* next);
     void setSon(TreeNode<K,D>* next);
 
-
-//    template<class KEY,class DATA>
-//    friend std::ostream& operator<<(std::ostream& os, const TreeNode<KEY,DATA> &node);
     template <class KEY,class DATA>
     friend class AVLTree;
-
 
 
 //TODO:delete when done testing
     friend class TestAVLTree;
 
 public:
-    TreeNode() : key(), data(), right(nullptr), left(nullptr),
-                                                    father(nullptr), hl(0), hr(0){};
-    TreeNode(K key, D data) : key(key), data(data), right(nullptr), left(nullptr),
-                                                    father(nullptr), hl(0), hr(0){};
+    TreeNode() : data(), key(), left(nullptr), right(nullptr),
+                                                father(nullptr), hl(0), hr(0){};
+    TreeNode(K key, D data) :  data(data), key(key),left(nullptr),
+                              right(nullptr), father(nullptr), hl(0), hr(0){};
     ~TreeNode() = default;
 
     void printNode();

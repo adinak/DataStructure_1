@@ -3,6 +3,9 @@ project(Wet1)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(GCC_COVERAGE_COMPILE_FLAGS "-DNDEBUG -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+
 set(LIST ./LinkedList)
 set(CHART ./StreamingChart)
 set(TREE ./AVLTree)
@@ -14,6 +17,7 @@ include_directories(${TREE})
 include_directories(${MANAGER})
 
 add_executable(Wet1
+                #main.cpp
                 #main1.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h

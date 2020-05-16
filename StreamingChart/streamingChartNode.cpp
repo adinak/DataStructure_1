@@ -46,6 +46,7 @@ StreamingChartNodeZero::~StreamingChartNodeZero() {
 
 /**      PUSH       **/
 void* StreamingChartNodeZero::pushSong(int artistID, int songID) {
+    return nullptr;
 //    List<Song*>* temp_list = *(this->songChart.find(artistID));
 //    if(temp_list == nullptr) {
 //        this->pushArtist(artistID);
