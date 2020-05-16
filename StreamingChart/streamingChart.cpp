@@ -118,6 +118,8 @@ streamingChart::addToSongInZero(ListNode<Song *>* song, int artistID,
     ChartNode next_node = this->getHead()->getNext();
     if(next_node == nullptr) {
         next_node = this->pushStreamsLast(numOfStreams);
+    } else if(next_node->getData()->getNumberOfStreams() != numOfStreams) {
+        next_node = this->pushStreamsNode(numOfStreams, this->getHead());
     }
     auto next_chart = dynamic_cast<DataTree>(next_node->getData());
     next_chart->pushSong(artistID, songID);

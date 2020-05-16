@@ -264,6 +264,9 @@ ListResult List<T>::popNode(ListNode<T>* node) {
     if(this->isEmpty()) {
         return LIST_IS_EMPTY;
     }
+    if(this->length == 1){
+        this->clearList();
+    }
     if(node == this->getHead()) {
         this->popFirst();
         return LIST_SUCCESS;
@@ -313,6 +316,7 @@ void List<T>::clearList() {
     while (this->head != nullptr) {
         this->popFirst();
     }
+    this->tail = nullptr;
 }
 
 template<typename T>

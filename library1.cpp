@@ -56,24 +56,21 @@ StatusType NumberOfStreams(void *DS, int artistID, int songID, int *streams) {
         return INVALID_INPUT;
     }
     auto* music_manager = (MusicManager*)DS;
-    Artist* artist = *(music_manager->getArtistTree()->find(artistID));
+    Artist** artist = music_manager->getArtistTree()->find(artistID);
     if(artist == nullptr) {
         return FAILURE;
     }
-    if(songID >= artist->getNumberOfSongs()) {
+    if(songID >= (*artist)->getNumberOfSongs()) {
         return INVALID_INPUT;
     }
-    *streams = artist->getStreamsOfSong(songID);
+    *streams = (*artist)->getStreamsOfSong(songID);
     return SUCCESS;
 }
 
 StatusType
 GetRecommendedSongs(void *DS, int numOfSongs, int *artists, int *songs) {
-    if(DS == nullptr) {
+    if(DS == nullptr || numOfSongs <= 0) {
         return INVALID_INPUT;
-    }
-    if(numOfSongs <= 0) {
-        return ALLOCATION_ERROR;
     }
     auto* music_manager = (MusicManager*)DS;
     if(numOfSongs > music_manager->getNumberOfSongs()) {

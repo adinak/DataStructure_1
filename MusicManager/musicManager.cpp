@@ -44,32 +44,33 @@ void MusicManager::removeArtist(int artistID) {
     Artist* artist = *(this->getArtistTree()->find(artistID));
     int streams;
     DataZero zero;
-    List<Song*>* ptr_list;
-    DataTree ptr_node_tree;
-    ListNode<Song*>* ptr_song_zero;
-    Song* dead;
+    List<Song*>** ptr_list;
+    ChartTree ptr_node_tree;
     int n = artist->getNumberOfSongs();
 
     for (int i = 0; i < n; ++i) {
         streams = artist->getStreamsOfSong(i);
         if(streams == 0) {
-            ptr_song_zero = static_cast<ListNode<Song *> *>(artist->getSong(i));
             zero = dynamic_cast<DataZero>(this->getMusicChart()->getHeadData());
-            ptr_list = *(zero->getArtistTree()->find(artistID));
-            dead = ptr_song_zero->getData();
-            ptr_list->popNode(ptr_song_zero);
-            delete dead;
+            ptr_list = zero->getArtistTree()->find(artistID);
+            if(ptr_list != nullptr) {
+                zero->popArtist(artistID);
+            }
         } else {
-            ptr_node_tree = static_cast<DataTree>(artist->getSong(i));
-            ptr_node_tree->popSong(artistID, i);
+            ptr_node_tree = static_cast<ChartTree>(artist->getSong(i));
+            auto* artist_tree = ptr_node_tree->getData()->getArtistTree();
+            if(artist_tree->find(artistID) != nullptr) {
+                ptr_node_tree->getData()->popArtist(artistID);
+            }
         }
     }
+    this->artistTree.remove(artistID);
+    delete artist;
     this->updateNumberOfSongs(-n);
 }
 
 void MusicManager::addToSongCount(int artistID, int songID) {
     //must be artist with artistID in the system
-    //std::cout<<this->getMusicChart()->getHeadData()->getNumberOfStreams()<<std::endl;
     Artist* artist = *(this->getArtistTree()->find(artistID));
     int streams = artist->getStreamsOfSong(songID);
     streamingChart* chart = this->getMusicChart();
