@@ -18,8 +18,8 @@ include_directories(${MANAGER})
 
 add_executable(Wet1
                 #main.cpp
-                #test_main.cpp #debug
-                main1.cpp
+                test_main.cpp #debug
+                #main1.cpp
                 ${LIST}/list.h
                 ${LIST}/listNode.h
                 ${CHART}/streamingChart.h
