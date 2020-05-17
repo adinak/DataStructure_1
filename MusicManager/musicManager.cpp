@@ -47,7 +47,6 @@ void MusicManager::removeArtist(int artistID) {
     List<Song*>** ptr_list;
     ChartTree ptr_node_tree;
     int n = artist->getNumberOfSongs();
-
     for (int i = 0; i < n; ++i) {
         streams = artist->getStreamsOfSong(i);
         if(streams == 0) {

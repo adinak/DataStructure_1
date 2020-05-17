@@ -45,20 +45,12 @@ StreamingChartNodeZero::~StreamingChartNodeZero() {
 }
 
 /**      PUSH       **/
+//Never used functions for polymorphism reasons
 void* StreamingChartNodeZero::pushSong(int artistID, int songID) {
     return nullptr;
-//    List<Song*>* temp_list = *(this->songChart.find(artistID));
-//    if(temp_list == nullptr) {
-//        this->pushArtist(artistID);
-//        temp_list = *(this->songChart.find(artistID));
-//    }
-//    this->increaseNumOfSongs();
-//    auto new_song = new Song(artistID, songID);
-//    return temp_list->pushLast(new_song);
-}//TODO:delete if not nessecery
-
+}
+//Never used functions for polymorphism reasons
 void StreamingChartNodeZero::pushArtist(int artistID) {}
-//TODO:delete if not nessecery
 
 /**      POP       **/
 void StreamingChartNodeZero::popArtist(int artistID) {
@@ -156,9 +148,7 @@ void StreamingChartNodeTree::popSong(int artistID, int songID) {
         if ((*temp_tree)->getSize() == 0) {
             this->popArtist(artistID);
         }
-        if(dead != nullptr){
-            delete dead;
-        }
+        delete dead;
         this->decreaseNumOfSongs();
     }
 }
