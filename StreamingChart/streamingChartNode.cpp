@@ -114,7 +114,7 @@ StreamingChartNodeTree::~StreamingChartNodeTree() {
     }
     List<Song*>::Iterator j = list_to_delete.beginFront();
     for(;!(j==list_to_delete.end()); ++j){
-        Song* d =  (*j)->getData();//to verify that we delete Song*
+        Song* d =  (*j)->getData(); //to verify that we delete Song*
         delete d;
     }
 }
