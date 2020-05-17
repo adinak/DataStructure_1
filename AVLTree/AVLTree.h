@@ -29,8 +29,8 @@ private:
     //Number of nodes in the tree
     int num_of_nodes;
     TreeNode<K,D>* root;
-    //Pointer to the node with the biggest Key
-    TreeNode<K,D>* biggest_node;
+    //Pointer to the node with the smallest_node Key
+    TreeNode<K,D>* smallest_node;
 
     //Rotating function for inserting or deleting nodes
     AVLTreeResult rotateLL(TreeNode<K,D>* B);
@@ -165,14 +165,14 @@ public:
  */
 
 template<class K, class D>
-AVLTree<K, D>::AVLTree():num_of_nodes(0),root(nullptr), biggest_node(nullptr){}
+AVLTree<K, D>::AVLTree():num_of_nodes(0), root(nullptr), smallest_node(nullptr){}
 
 template<class K, class D>
 AVLTree<K, D>::~AVLTree() {
     clearTree(this->root);
     num_of_nodes = 0;
     this->root = nullptr;
-    this->biggest_node = nullptr;
+    this->smallest_node = nullptr;
 }
 
 /* ----------------------------------
@@ -308,10 +308,10 @@ template<class K, class D>
 AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
     K key = new_node->getKey();
     TreeNode<K,D>* curr = this->root;
-    bool new_biggest_node = true;
+    bool new_smallest_node = true;
     if(curr == nullptr){
         this->root = new_node;
-        this->biggest_node = new_node;
+        this->smallest_node = new_node;
         return AVL_SUCCESS;
     }
     while(curr!= nullptr){
@@ -322,15 +322,15 @@ AVLTreeResult AVLTree<K, D>::addNewNode(TreeNode<K,D>* new_node) {
         else if(key>curr_key){
             if(curr->getRight() == nullptr){
                 curr->setRight(new_node);
-                if(new_biggest_node){
-                    this->biggest_node = new_node;
+                if(new_smallest_node){
+                    this->smallest_node = new_node;
                 }
                 break;
             }
             curr = curr->getRight();
         }
         else if(key<curr_key){
-            new_biggest_node = false;
+            new_smallest_node = false;
             if(curr->getLeft() == nullptr){
                 curr->setLeft(new_node);
                 break;
@@ -467,7 +467,7 @@ template<class K, class D>
 TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
     TreeNode<K,D>* dead;
     TreeNode<K,D>* father = node_to_delete->getFather();
-    bool biggest = (this->biggest_node->getKey() == node_to_delete->getKey());
+    bool biggest = (this->smallest_node->getKey() == node_to_delete->getKey());
     if (node_to_delete->getLeft() != nullptr &&
                                         node_to_delete->getRight() == nullptr) {
         dead = node_to_delete;
@@ -479,9 +479,9 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
             father->setSon(node_to_delete->getLeft());
         }
         if(biggest){
-            this->biggest_node = this->biggest_node->getLeft();
-            while(this->biggest_node->getRight() != nullptr) {
-                this->biggest_node = this->biggest_node->getRight();
+            this->smallest_node = this->smallest_node->getLeft();
+            while(this->smallest_node->getRight() != nullptr) {
+                this->smallest_node = this->smallest_node->getRight();
             }
         }
         delete dead;
@@ -514,7 +514,7 @@ TreeNode<K, D> * AVLTree<K, D>::deleteNode(TreeNode<K, D> *node_to_delete) {
             father->setLeft(nullptr);
         }
         if(biggest){
-            this->biggest_node = father;
+            this->smallest_node = father;
         }
         delete dead;
         return father;
@@ -692,7 +692,7 @@ void AVLTree<K, D>::clear() {
     clearTree(this->root);
     num_of_nodes = 0;
     this->root = nullptr;
-    this->biggest_node = nullptr;
+    this->smallest_node = nullptr;
     return;
 }
 
